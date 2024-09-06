@@ -1,0 +1,13 @@
+---
+- name: Gather facts from a linux server
+  hosts: all
+  # gather_facts: True this is the default
+  tasks:
+    - name: touch a file in user's home directory
+      ansible.builtin.file:
+        path: '/home/{{ ansible_user }}/ansible_test.txt'
+        state: touch
+        mode: u=rw,g=r,o=r
+    - name: Show me the linux server facts
+      ansible.builtin.debug:
+       var: ansible_facts
