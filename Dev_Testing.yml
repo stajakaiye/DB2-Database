@@ -6,4 +6,4 @@
     - name: Print system hostname
       command: hostname
     - name: check Java version
-      command: ls 
+      command: ls -lrt;pwd
