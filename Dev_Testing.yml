@@ -1,9 +1,9 @@
 ---
 - name: Gather facts from a linux server
-  hosts: EBISDDB01.abcbs.net
+  #hosts: EBISDDB01.abcbs.net
+  hosts: ibmigsddb2b.abcbs.net
   gather_facts: true
   tasks:
     - name: Print system hostname
       command: hostname
-    - name: check Java version
-      command: ls -lrt;pwd
+
