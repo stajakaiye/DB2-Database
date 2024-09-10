@@ -1,6 +1,6 @@
 ---
 - name: Gather facts from a linux server
-  hosts: EBISDDB01
+  hosts: EBISDDB01.abcbs.net
   # gather_facts: True this is the default
   tasks:
     - name: touch a file in user's home directory
