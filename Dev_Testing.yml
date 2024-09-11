@@ -6,6 +6,8 @@
   become_method: sudo
   gather_facts: true
   tasks:
+    - name: Gather system fact
+      register: system_fact
     - name: Print system hostname
       command: hostname
 
