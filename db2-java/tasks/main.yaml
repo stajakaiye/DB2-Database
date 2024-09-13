@@ -1,7 +1,6 @@
----
-- name: Gather facts from a linux server
-  hosts: EBISDDB01.abcbs.net
-  gather_facts: true
-  tasks:
-    - name: Print system hostname
-      command: hostname
+name: Gather facts from a linux server
+hosts: EBISDDB01.abcbs.net
+gather_facts: true
+tasks:
+  - name: Print system hostname
+    command: hostname
