@@ -1,9 +1,5 @@
 ---
 - name: Install  update and configure Java on db2 server
   hosts: EBISDDB01.abcbs.net
-  #hosts: ibmigsddb2b.abcbs.net
-  #become: yes
- # become_method: sudo
-  #gather_facts: true
   roles:
     - db2-java
