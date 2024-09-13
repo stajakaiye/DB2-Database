@@ -1,10 +1,10 @@
 ---
 - name: Gather facts from a linux server
-  #hosts: EBISDDB01.abcbs.net
-  hosts: ibmigsddb2b.abcbs.net
+  hosts: EBISDDB01.abcbs.net
+  #hosts: ibmigsddb2b.abcbs.net
   become: yes
   become_method: sudo
-  gather_facts: True
+  gather_facts: true
   tasks:
     - name: Print system hostname
       command: hostname
