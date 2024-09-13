@@ -1,6 +1,6 @@
 ---
 - name: Install  update and configure Java on db2 server
-  gather_facts: false
+  gather_facts: true
   hosts: EBISDDB01.abcbs.net
   roles:
     - db2-java
