@@ -7,3 +7,4 @@
   ansible.builtin.unarchive:
     src: /db2audit/java/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz
     dest: /db2audit/java/java64
+    remote_src: yes
