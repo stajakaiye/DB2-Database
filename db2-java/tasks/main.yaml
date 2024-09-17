@@ -4,7 +4,9 @@
 - name: check user
   command: whoami
 - name: Extract IBM Java package
-  ansible.builtin.unarchive:
-    src: /db2audit/java/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz
-    dest: /db2audit/java/java64
-    remote_src: yes
+  ansible.builtin.command:
+    cmd: tar -xvzf /db2audit/java/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz -C /db2audit/java/java64
+
+- name: Rename IBM Java package
+  ansible.builtin.command:
+    cmd: mv /db2audit/java/java64/ibm-java-x86_64-80 /db2audit/java/java64/jdk64
