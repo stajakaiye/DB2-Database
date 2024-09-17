@@ -3,7 +3,7 @@
   command: hostname
 - name: Extract IBM Java package
   unarchive:
-    src: /db2audit/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz
+    src: /db2audit/java/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz
     dest: /db2audit/java
     owner: bin
     group: bin
