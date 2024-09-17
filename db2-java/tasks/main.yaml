@@ -3,8 +3,14 @@
   command: hostname
   become: yes
   become_method: sudo
-- name: check user
-  command: whoami
+- name: Stop database bcuaixp
+  shell: sudo -iu bcuaixp db2stop force
+  register: stop result
+- name: Check id database stopped 
+  failed_when: stop_result.rc !=0
+  debug:
+    msg: "failed to stop database"
+
 - name: Extract IBM Java package
   ansible.builtin.command:
     cmd: tar -xvzf /db2audit/java/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz -C /db2audit/java/java64
