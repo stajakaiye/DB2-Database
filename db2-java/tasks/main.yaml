@@ -3,8 +3,25 @@
   command: hostname
   become: yes
   become_method: sudo
+  
 - name: Stop database bcuaixp
   shell: sudo -iu bcuaixp db2stop force
+  register: stop result
+- name: Check id database stopped 
+  failed_when: stop_result.rc !=0
+  debug:
+    msg: "failed to stop database"
+    
+- name: Stop database ebjhost
+  shell: sudo -iu ebjhost db2stop force
+  register: stop result
+- name: Check id database stopped 
+  failed_when: stop_result.rc !=0
+  debug:
+    msg: "failed to stop database"
+    
+- name: Stop database ebiedw
+  shell: sudo -iu ebiedw db2stop force
   register: stop result
 - name: Check id database stopped 
   failed_when: stop_result.rc !=0
