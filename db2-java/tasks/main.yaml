@@ -12,8 +12,8 @@
   debug:
     msg: "failed to stop database"
     
-- name: Stop database ebjhost
-  shell: sudo -iu ebjhost db2stop force
+- name: Stop database ebihost
+  shell: sudo -iu ebihost db2stop force
   register: stop result
 - name: Check id database stopped 
   failed_when: stop_result.rc !=0
@@ -42,5 +42,10 @@
     owner: bin
     group: bin
     recurse: yes
-
+- name: Start database
+  shell: sudo -iu bcuaixp db2start
+  changed_when: stop_result.changed
+- name: Start database
+  shell: sudo -iu ebihost db2start
+  changed_when: stop_result.changed
     
