@@ -1,6 +1,8 @@
 ---
 - name: Print system hostname
   command: hostname
+  become: yes
+  become_method: sudo
 - name: check user
   command: whoami
 - name: Extract IBM Java package
@@ -10,3 +12,13 @@
 - name: Rename IBM Java package
   ansible.builtin.command:
     cmd: mv /db2audit/java/java64/ibm-java-x86_64-80 /db2audit/java/java64/jdk64
+
+- name: change owner IBM Java package
+  ansible.builtin.file:
+    path: /db2audit/java/java64/jdk64
+    mode: '0755'
+    owner: bin
+    group: bin
+    recurse: yes
+
+    
