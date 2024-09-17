@@ -8,4 +8,3 @@
     owner: bin
     group: bin
     mode: '0755'
-    remote_src: no
