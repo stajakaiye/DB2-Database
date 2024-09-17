@@ -6,27 +6,13 @@
   
 - name: Stop database bcuaixp
   shell: sudo -iu bcuaixp db2stop force
-  
-- name: Check id database stopped 
-  failed_when: stop_result.rc !=0
-  debug:
-    msg: "failed to stop database"
-    
+      
 - name: Stop database ebihost
   shell: sudo -iu ebihost db2stop force
-  register: stop result
-- name: Check id database stopped 
-  failed_when: stop_result.rc !=0
-  debug:
-    msg: "failed to stop database"
+
     
 - name: Stop database ebiedw
   shell: sudo -iu ebiedw db2stop force
-  register: stop result
-- name: Check id database stopped 
-  failed_when: stop_result.rc !=0
-  debug:
-    msg: "failed to stop database"
 
 - name: Extract IBM Java package
   ansible.builtin.command:
@@ -53,13 +39,13 @@
     
 - name: Start database
   shell: sudo -iu bcuaixp db2start
-  changed_when: stop_result.changed
+
   
 - name: Start database
   shell: sudo -iu ebihost db2start
-  changed_when: stop_result.changed
+
   
 - name: Start database
   shell: sudo -iu ebiedw db2start
-  changed_when: stop_result.changed
+
     
