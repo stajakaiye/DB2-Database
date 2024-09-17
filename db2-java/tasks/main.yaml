@@ -16,7 +16,6 @@
 - name: change owner IBM Java package
   ansible.builtin.file:
     path: /db2audit/java/java64/jdk64
-    mode: '0755'
     owner: bin
     group: bin
     recurse: yes
