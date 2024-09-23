@@ -9,7 +9,7 @@
       prompt: "Enter Database name:"
   tasks:
     - name: Check DB2 status
-      shell: sudo -iu {{db2_database}} db2status |grep "active"
+      shell: db2 list active databases
       register: db2_status
     - name: Stop DB2
       shell: sudo -iu {{db2_database}} db2stop force
