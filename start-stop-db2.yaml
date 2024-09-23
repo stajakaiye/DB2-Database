@@ -3,11 +3,17 @@
   hosts: db2_servers
   become: yes
   become_method: sudo
-  gather_facts: True
+  gather_facts: True 
+  var_prompt:
+    - name: db2_database
+      prompt: "Enter Database name:"
   tasks:
-    - name: Start DB2
-      shell: 
+    - name: Check DB2 status
+      shell: sudo -iu {{db2_database}} db2status |grep "active"
+      register: db2_status
+    - name: Stop DB2
+      shell: sudo -iu {{db2_database}} db2stop force
       when: db2_action == "stop"
     - name: Start DB2
-      shell: 
+      shell: sudo -iu {{db2_database}} db2start
       when: db2_action == "start"
