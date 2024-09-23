@@ -1,1 +1,13 @@
-
+---
+- name: Stop/Start  DB2 
+  hosts: db2_servers
+  become: yes
+  become_method: sudo
+  gather_facts: True
+  tasks:
+    - name: Start DB2
+      shell: 
+      when: db2_action == "stop"
+    - name: Start DB2
+      shell: 
+      when: db2_action == "start"
