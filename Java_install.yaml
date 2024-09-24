@@ -4,7 +4,7 @@
   hosts: ebisudb01.abcbs.net
   become: yes
   become_method: sudo
-  var_prompt:
+  vars_prompt:
     - name: jdk_binary_location
       prompt: "Enter the Java binary software path location:"
   roles:
