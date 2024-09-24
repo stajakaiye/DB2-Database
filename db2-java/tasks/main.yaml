@@ -3,17 +3,6 @@
   command: hostname
   become: yes
   become_method: sudo
-
-- name: Stop database bcuaixp
-  shell: sudo -iu bcuaixp db2stop force
-      
-- name: Stop database ebihost
-  shell: sudo -iu ebihost db2stop force
-
-    
-- name: Stop database ebiedw
-  shell: sudo -iu ebiedw db2stop force
-
 - name: Extract IBM Java package
   ansible.builtin.command:
     cmd: "tar -xvzf {{jdk_binary_location}}/java/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz -C {{jdk_binary_location}}/java/java64"
