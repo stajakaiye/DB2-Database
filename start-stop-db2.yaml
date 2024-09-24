@@ -1,5 +1,5 @@
 ---
-- name: Stop/Start  DB2 
+- name: Stop Start  DB2 
   hosts: ebisudb01.abcbs.net
   become: yes
   become_method: sudo
