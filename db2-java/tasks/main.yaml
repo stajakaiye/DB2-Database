@@ -5,10 +5,10 @@
   become_method: sudo
   
 - name: create java directory
-  shell: mkdir -p {{jdk_binary_location}}/java/jdk64_bkp
+  shell: mkdir -p {{jdk_binary_location}}/java/jdk64_bkp;chmod -R 775  {{jdk_binary_location}}/java/jdk64_bkp
 
 - name: create java directory
-  shell: mkdir -p {{jdk_binary_location}}/java/java64
+  shell: mkdir -p {{jdk_binary_location}}/java/java64;chmod -R 775 {{jdk_binary_location}}/java/java64
   
 - name: Stop database bcuaixp
   shell: sudo -iu bcuaixp db2stop force
