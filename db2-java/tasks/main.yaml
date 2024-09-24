@@ -16,19 +16,19 @@
 
 - name: Extract IBM Java package
   ansible.builtin.command:
-    cmd: tar -xvzf /db2audit/java/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz -C /db2audit/java/java64
+    cmd: "tar -xvzf {{jdk_binary_location}}/java/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz -C {{jdk_binary_location}}/java/java64"
     
 - name: taking backup of alraedy installed IBM Java package
   ansible.builtin.command:
-    cmd: mv /opt/ibm/db2/V11.5.9/java/jdk64  /db2audit/java/jdk64_09172024 
+    cmd: mv /opt/ibm/db2/V11.5.9/java/jdk64  {{jdk_binary_location}}/java/jdk64_bkp 
 
 - name: Rename IBM Java package
   ansible.builtin.command:
-    cmd: mv /db2audit/java/java64/ibm-java-x86_64-80 /db2audit/java/java64/jdk64
+    cmd: "mv {{jdk_binary_location}}/java/java64/ibm-java-x86_64-80 {{jdk_binary_location}}/java/java64/jdk64"
     
 - name: copy IBM Java package
   ansible.builtin.command:
-    cmd: mv /db2audit/java/java64/jdk64 /opt/ibm/db2/V11.5.9/java/
+    cmd: "mv {{jdk_binary_location}}/java/java64/jdk64 /opt/ibm/db2/V11.5.9/java/"
     
 - name: change owner IBM Java package
   ansible.builtin.file:
