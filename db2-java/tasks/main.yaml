@@ -5,11 +5,17 @@
   become_method: sudo
   
 - name: create java directory
-  shell: mkdir -p {{jdk_binary_location}}/java/jdk64_bkp;chmod -R 775  {{jdk_binary_location}}/java/jdk64_bkp
-
-- name: create java directory
-  shell: mkdir -p {{jdk_binary_location}}/java/java64;chmod -R 775 {{jdk_binary_location}}/java/java64
-  
+  ansible.builtin.file:
+    path:  "{{jdk_binary_location}}/java/java64"
+    state: directory
+    mode: '0775'
+    
+- name: create java dump backup  directory
+  ansible.builtin.file:
+    path:  "{{jdk_binary_location}}/java/jdk64_bkp"
+    state: directory
+    mode: '0775'
+    
 - name: Stop database bcuaixp
   shell: sudo -iu bcuaixp db2stop force
       
