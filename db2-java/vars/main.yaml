@@ -1,4 +1,4 @@
 ---
 - name: Set jdk_binary_location variable
   set_fact:
-     jdk_binary_location: "{{jdk_binary_location}}"
+     jdk_binary_location: /tmp
