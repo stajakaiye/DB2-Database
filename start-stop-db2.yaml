@@ -4,9 +4,11 @@
   become: yes
   become_method: sudo
   gather_facts: True 
-  var_prompt:
+  vars_prompt:
     - name: db2_database
       prompt: "Enter Database name:"
+    - name: db2_action
+      prompt: "Enter action(start/stop):"
   tasks:
     - name: Check DB2 status
       shell: db2 list active databases
