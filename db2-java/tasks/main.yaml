@@ -20,6 +20,7 @@
   register: db2_databases
     
 - name: Stop each db2 database
+  loop: "{{ db2_databases.stdout.split() }}"
   loop_control:
     index_var: db2_instance
   tasks:
