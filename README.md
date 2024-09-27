@@ -7,10 +7,8 @@ Before running the playbook ensure below
 
 Java dump should placed on DB2 server 
 
-This playbook prompt for below variable
-
-#jdk_binary_location: "Enter the files system path eg. /tmp "
-
+This playbook prompt for below variable\
+#jdk_binary_location: "Enter the files system path eg. /tmp "\
 jdk_binary_location: /tmp
 
 Running the playbook in Ansible Tower\
