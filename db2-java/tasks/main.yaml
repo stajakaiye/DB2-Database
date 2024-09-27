@@ -55,16 +55,19 @@
     owner: bin
     group: bin
     recurse: yes
+
+- name: Start each db2 database
+  debug:
+    msg: "Starting DB2 database: {{ item }}"
+  loop: "{{ db2_databases.stdout.split() }}"
+  loop_control:
+    index_var: db2_instance
+  check_mode: no
     
-- name: Start database
-  shell: sudo -iu bcuaixp db2start
-
-  
-- name: Start database
-  shell: sudo -iu ebihost db2start
-
-  
-- name: Start database
-  shell: sudo -iu ebiedw db2start
+- name: Start each db2 database
+  shell: sudo -iu {{item}} db2start
+  loop: "{{ db2_databases.stdout.split() }}"
+  loop_control:
+    index_var: db2_instance 
 
     
