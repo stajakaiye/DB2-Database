@@ -20,12 +20,10 @@
   register: db2_databases
     
 - name: Stop each db2 database
+  shell: sudo -iu {{item}} db2stop force
   loop: "{{ db2_databases.stdout.split() }}"
   loop_control:
-    index_var: db2_instance
-  tasks:
-    - name: stop database {{{db2_instance}}
-      shell: sudo -iu {{db2_instance}} db2stop force
+    index_var: db2_instance      
   
 - name: Extract IBM Java package
   ansible.builtin.command:
