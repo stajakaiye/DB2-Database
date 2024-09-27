@@ -24,7 +24,8 @@
     msg: "Stopping DB2 database: {{ item }}"
   loop: "{{ db2_databases.stdout.split() }}"
   loop_control:
-    index_var: db2_instance  
+    index_var: db2_instance
+  check_mode: no
     
 - name: Stop each db2 database
   shell: sudo -iu {{item}} db2stop force
