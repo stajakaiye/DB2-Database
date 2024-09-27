@@ -15,16 +15,16 @@
     path:  "{{jdk_binary_location}}/java/jdk64_bkp"
     state: directory
     mode: '0775'
+- name: Get running DB2 databses
+  shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
+  register: db2_databases
     
-- name: Stop database bcuaixp
-  shell: sudo -iu bcuaixp db2stop force
-      
-- name: Stop database ebihost
-  shell: sudo -iu ebihost db2stop force
-
-    
-- name: Stop database ebiedw
-  shell: sudo -iu ebiedw db2stop force
+- name: Stop each db2 database
+  loop_control:
+    index_var: db2_instance
+  tasks:
+    - name: stop database {{{db2_instance}}
+      shell: sudo -iu {{db2_instance}} db2stop force
   
 - name: Extract IBM Java package
   ansible.builtin.command:
