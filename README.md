@@ -3,11 +3,14 @@
 This reposistory contains an ansible playbook for IBM DB2 Java upgrade
 
 ### Prerequisites 
-Before running the playbook ensure below\ 
+Before running the playbook ensure below
+
 Java dump placed on placed on DB2 server 
 
-This playbook prompt for below variable\ 
-#jdk_binary_location: "Enter the files system path eg. /tmp "\
+This playbook prompt for below variable
+
+#jdk_binary_location: "Enter the files system path eg. /tmp "
+
 jdk_binary_location: /tmp
 
 Running the playbook in Ansible Tower\
