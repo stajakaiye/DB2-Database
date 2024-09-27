@@ -5,7 +5,7 @@ This reposistory contains an ansible playbook for IBM DB2 Java upgrade
 ### Prerequisites 
 Before running the playbook ensure below
 
-Java dump placed on placed on DB2 server 
+Java dump should placed on DB2 server 
 
 This playbook prompt for below variable
 
