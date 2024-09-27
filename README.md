@@ -12,7 +12,7 @@ jdk_binary_location: /tmp
 
 Running the playbook in Ansible Tower\
 Go to ansible tower using below url\
-https://anssttow01.abcbs.net/#/projects\
+https://anssttow01.abcbs.net/#/projects
 
 Find template name "Java_Upgrade_Template" ---> Click the Launch button and then enter jdk_binary_location: <enter dump location on db2 server>  --> next -->Launch
 
