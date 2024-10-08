@@ -1,7 +1,7 @@
 ---
 - name: Install  update and configure Java on db2 server
   gather_facts: true
-  hosts: ebisudb01.abcbs.net
+  hosts: ebissdb01.abcbs.net
   become: yes
   become_method: sudo
   vars_prompt:
