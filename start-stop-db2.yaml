@@ -1,6 +1,6 @@
 ---
 - name: Stop Start  DB2 
-  hosts: ebisudb01.abcbs.net
+  hosts: ebissdb01.abcbs.net
   become: yes
   become_method: sudo
   gather_facts: True 
