@@ -10,7 +10,10 @@
     - name: db2_action
       prompt: "Enter action(start/stop):"
   tasks:
-    - name: Check DB2 status
-      shell: sudo db2 list active databases
-      register: db2_status
+    - name: Stop DB2
+      shell: sudo -iu {{db2_database}} db2stop force
+      when: db2_action == "stop"
+    - name: Start DB2
+      shell: sudo -iu {{db2_database}} db2start
+      when: db2_action == "start"
 
