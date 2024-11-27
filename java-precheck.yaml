@@ -14,3 +14,5 @@
     - name: Display found Java paths
       debug:
         msg: "Found Java binary at {{ item }}"
+      with_items: "{{ unique_java_path}}"
+      
