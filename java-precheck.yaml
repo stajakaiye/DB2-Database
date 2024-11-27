@@ -21,5 +21,12 @@
       with_items: "{{ unique_java_path}}"
       register: java_versions
       ignore_errors: yes
+    - name: Display Java version result
+      debug: 
+        msg: | 
+          Path: {{ item.item }}
+          Output: |
+            {{ item.stdout }}
+      with_items: "{{ java_versions.results}}" 
         
       
