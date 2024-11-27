@@ -1,6 +1,6 @@
 ---
 - name: Java Pre-Check on Database server
-  hosts: all
+  hosts: ebisddb01.abcbs.net
   gather_facts: no
   tasks:
     - name: Find all path where Java is Installed
