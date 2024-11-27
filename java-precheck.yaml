@@ -13,6 +13,13 @@
         unique_java_paths: "{{ java_paths_stdout_lines|unique }}"
     - name: Display found Java paths
       debug:
-        msg: "Found Java binary at {{ item }}"
+        msg: "Found Java binary at {{ itnameem }}"
       with_items: "{{ unique_java_path}}"
+    - name: Check Java Version for each path 
+      shell: |
+        {{ item }} -version 2 > $1
+      with_items: "{{ unique_java_path}}"
+      register: java_versions
+      ignore_errors: yes
+        
       
