@@ -1,0 +1,16 @@
+---
+- name: Java Pre-Check on Database server
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Find all path where Java is Installed
+      shell: |
+      find / -type d \(-name "java" -o -name "jdk" -o -name "jre*"\)
+      register: java_paths
+      ignore_errors: yes
+    - name: Ensure Java path are uniqe
+      set_fact:
+        unique_java_paths: "{{ java_paths_stdout_lines|unique }}"
+    - name: Display found Java paths
+      debug:
+        msg: "Found Java binary at {{ item }}"
