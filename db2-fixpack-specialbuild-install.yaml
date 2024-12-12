@@ -1,0 +1,11 @@
+---
+- name: Install/Upgrade DB2 Fix pack special build on db2 server
+  gather_facts: true
+  hosts: ebissdb01.abcbs.net
+  become: yes
+  become_method: sudo
+  vars_prompt:
+    - name: fixpack_binary_location
+      prompt: "Enter the Fix pack  binary software path location:"
+  roles:
+    - db2-fixpack
