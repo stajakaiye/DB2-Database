@@ -4,6 +4,26 @@
   become: yes
   become_method: sudo
   
+- name: Get running DB2 databses instance
+  shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
+  register: running_instances
+
+- name: Get fence ID for each instance
+  shell: |
+     if [ -f /home/sqllib/ctrl/.fencedID ] ; then 
+      cat /home/sqllib/ctrl/.fenceID
+      else
+      db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
+      fi
+  register: fence_ids
+  with_items: "{ running_instances.stdout_lines}"
+  loop_control: 
+    loop_var: instance
+
+- name: Run db2support and rename the file
+  shell: |
+    db2support {}
+  
 - name: create java directory
   ansible.builtin.file:
     path:  "{{jdk_binary_location}}/java/java64"
@@ -15,9 +35,6 @@
     path:  "{{jdk_binary_location}}/java/jdk64_bkp"
     state: directory
     mode: '0775'
-- name: Get running DB2 databses
-  shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
-  register: db2_databases
   
 - name: Stop each db2 database
   debug:
