@@ -4,8 +4,8 @@
   hosts: ebissdb01.abcbs.net
   become: yes
   become_method: sudo
-  vars_prompt:
-    - name: fixpack_binary_location
-      prompt: "Enter the Fix pack  binary software path location:"
+  vars:
+    new_db2_path: "/opt/ibm/db2/V11.5.9_SP"
+    base_db2_path: "/opt/ibm/db2/V11.5.9"
   roles:
     - db2-fixpack
