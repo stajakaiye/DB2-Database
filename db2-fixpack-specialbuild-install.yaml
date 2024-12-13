@@ -7,5 +7,6 @@
   vars:
     new_db2_path: "/opt/ibm/db2/V11.5.9_SP"
     base_db2_path: "/opt/ibm/db2/V11.5.9"
+    temp_dir: "/tmp"
   roles:
     - db2-fixpack
