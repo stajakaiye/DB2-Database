@@ -1,7 +1,7 @@
 ---
 - name: Install/Upgrade DB2 Fix pack special build on db2 server
   gather_facts: true
-  hosts: ebissdb01.abcbs.net
+  hosts: ebisddb01.abcbs.net
   become: yes
   become_method: sudo
   vars:
