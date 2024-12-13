@@ -1,1 +1,73 @@
-- name: Stop DB2 instance
+---
+- name: Print system hostname
+  command: hostname
+  become: yes
+  become_method: sudo
+  
+- name: create java directory
+  ansible.builtin.file:
+    path:  "{{jdk_binary_location}}/java/java64"
+    state: directory
+    mode: '0775'
+    
+- name: create java dump backup  directory
+  ansible.builtin.file:
+    path:  "{{jdk_binary_location}}/java/jdk64_bkp"
+    state: directory
+    mode: '0775'
+- name: Get running DB2 databses
+  shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
+  register: db2_databases
+  
+- name: Stop each db2 database
+  debug:
+    msg: "Stopping DB2 database: {{ item }}"
+  loop: "{{ db2_databases.stdout.split() }}"
+  loop_control:
+    index_var: db2_instance
+  check_mode: no
+    
+- name: Stop each db2 database
+  shell: sudo -iu {{item}} db2stop force
+  loop: "{{ db2_databases.stdout.split() }}"
+  loop_control:
+    index_var: db2_instance      
+  
+- name: Extract IBM Java package
+  ansible.builtin.command:
+    cmd: "tar -xvzf {{jdk_binary_location}}/java/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz -C {{jdk_binary_location}}/java/java64"
+    
+- name: taking backup of alraedy installed IBM Java package
+  ansible.builtin.command:
+    cmd: mv /opt/ibm/db2/V11.5.9/java/jdk64  {{jdk_binary_location}}/java/jdk64_bkp 
+
+- name: Rename IBM Java package
+  ansible.builtin.command:
+    cmd: "mv {{jdk_binary_location}}/java/java64/ibm-java-x86_64-80 {{jdk_binary_location}}/java/java64/jdk64"
+    
+- name: copy IBM Java package
+  ansible.builtin.command:
+    cmd: "mv {{jdk_binary_location}}/java/java64/jdk64 /opt/ibm/db2/V11.5.9/java/"
+    
+- name: change owner IBM Java package
+  ansible.builtin.file:
+    path: /opt/ibm/db2/V11.5.9/java/jdk64
+    owner: bin
+    group: bin
+    recurse: yes
+
+- name: Start each db2 database
+  debug:
+    msg: "Starting DB2 database: {{ item }}"
+  loop: "{{ db2_databases.stdout.split() }}"
+  loop_control:
+    index_var: db2_instance
+  check_mode: no
+    
+- name: Start each db2 database
+  shell: sudo -iu {{item}} db2start
+  loop: "{{ db2_databases.stdout.split() }}"
+  loop_control:
+    index_var: db2_instance 
+
+    
