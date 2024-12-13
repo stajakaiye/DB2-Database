@@ -22,20 +22,12 @@
 
 - name: Run db2support and rename the file
   shell: |
-    db2support {}
-  
-- name: create java directory
-  ansible.builtin.file:
-    path:  "{{jdk_binary_location}}/java/java64"
-    state: directory
-    mode: '0775'
-    
-- name: create java dump backup  directory
-  ansible.builtin.file:
-    path:  "{{jdk_binary_location}}/java/jdk64_bkp"
-    state: directory
-    mode: '0775'
-  
+    db2support {{ temp_dir }} -s
+    mv {{ temp_dir }}/db2support.zip {{ temp_dir }}/db2support_{{instance}}.zip
+    with_items: "{{ running_instances.stdout_lines }}"
+    loop_control:
+      loop_var: instance
+      
 - name: Stop each db2 database
   debug:
     msg: "Stopping DB2 database: {{ item }}"
@@ -48,20 +40,26 @@
   shell: sudo -iu {{item}} db2stop force
   loop: "{{ db2_databases.stdout.split() }}"
   loop_control:
-    index_var: db2_instance      
+    index_var: db2_instance 
   
-- name: Extract IBM Java package
-  ansible.builtin.command:
-    cmd: "tar -xvzf {{jdk_binary_location}}/java/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz -C {{jdk_binary_location}}/java/java64"
+- name: create  directory for new installation
+  ansible.builtin.file:
+    path:  "{{ new_db2_path }}"
+    state: directory
+    mode: '0775'
     
-- name: taking backup of alraedy installed IBM Java package
-  ansible.builtin.command:
-    cmd: mv /opt/ibm/db2/V11.5.9/java/jdk64  {{jdk_binary_location}}/java/jdk64_bkp 
+- name: Run the install special build fix pack
+  shell: |
+    ./installFixPack -b {{ base_db2_path }} -n -y -p {{ new_db2_path }}
+  args:
+    chdir: "{{ base_db2_path }}"
+    
+- name: Run db2iupdt for each instance
+  shell: |
+    /opt/ibm/db2/V11.5.9_SP/instance/db2iupdt -u {{ item.fence_id }} {{ item.instance }}
+  with_items: "{{ running_instances.stdout_lines }}"
+  l
 
-- name: Rename IBM Java package
-  ansible.builtin.command:
-    cmd: "mv {{jdk_binary_location}}/java/java64/ibm-java-x86_64-80 {{jdk_binary_location}}/java/java64/jdk64"
-    
 - name: copy IBM Java package
   ansible.builtin.command:
     cmd: "mv {{jdk_binary_location}}/java/java64/jdk64 /opt/ibm/db2/V11.5.9/java/"
