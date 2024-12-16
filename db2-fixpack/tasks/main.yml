@@ -41,12 +41,13 @@
     
 - name: Run db2iupdt for each instance
   shell: |
-    /opt/ibm/db2/V11.5.9_SP/instance/db2iupdt -u {{ item.fence_id }} {{ item.instance }}
-  with_items: "{{ running_instances.stdout_lines }}"
+    /opt/ibm/db2/V11.5.9_SP/instance/db2iupdt -u {{ fence_id }} {{ instance }}
+  loop: "{{ running_instances.stdout_lines }}"
   loop_control:
     loop_var: instance
-    vars:
-      fence_id: " {{ fence_ids.results[db2.index].stdout.strip() }}"
+    index_var: db2_index
+  vars:
+    fence_id: " {{ fence_ids.results[db2_index].stdout.strip() }}"
   
 - name: Start each db2 database
   shell: sudo -iu "{{instance }}" db2start
