@@ -1,8 +1,4 @@
 ---
-- name: Print system hostname
-  command: hostname
-  become: yes
-  become_method: sudo
   
 - name: Get running DB2 databses instance
   shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
@@ -10,7 +6,7 @@
 
 - name: Get fence ID for each instance
   shell: |
-    sudo -iu {{item}}  db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
+    sudo -iu "{{instance }}"  db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
   register: fence_ids
   with_items: "{{ running_instances.stdout_lines }}"
   loop_control: 
@@ -18,25 +14,18 @@
 
 - name: Run db2support and rename the file
   shell: |
-    sudo -iu {{item}} db2support {{ temp_dir }} -s
+    sudo -iu "{{ instance }}" db2support {{ temp_dir }} -s
     mv {{ temp_dir }}/db2support.zip {{ temp_dir }}/db2support_{{instance}}.zip
     with_items: "{{ running_instances.stdout_lines }}"
     loop_control:
       loop_var: instance
       
-- name: Stop each db2 database
-  debug:
-    msg: "Stopping DB2 database: {{ item }}"
-  loop: "{{ running_instances.stdout.split() }}"
-  loop_control:
-    index_var: db2_instance
-  check_mode: no
     
 - name: Stop each db2 database
-  shell: sudo -iu {{item}} db2stop force
-  loop: "{{ running_instances.stdout.split() }}"
+  shell: sudo -iu "{{item}}" db2stop force
+  with_items: "{{ running_instances.stdout_lines }}"
   loop_control:
-    index_var: db2_instance 
+    index_var: instance 
   
 - name: create  directory for new installation
   ansible.builtin.file:
@@ -57,31 +46,11 @@
   loop_control:
     loop_var: instance
     vars:
-      fence_id: " {{ fence_ids.results[loop.index - 1].stdout.strip() }}"
-
-
-
+      fence_id: " {{ fence_ids.results[db2.index].stdout.strip() }}"
+  
 - name: Start each db2 database
-  debug:
-    msg: "Starting DB2 database: {{ item }}"
-  loop: "{{ - name: Stop each db2 database
-  debug:
-    msg: "Stopping DB2 database: {{ item }}"
+  shell: sudo -iu "{{instance }}" db2start
   loop: "{{ running_instances.stdout.split() }}"
   loop_control:
-    index_var: db2_instance
-  check_mode: no
-    
-- name: Start each db2 database
-  shell: sudo -iu {{item}} db2start
-  loop: "{{ - name: Stop each db2 database
-  debug:
-    msg: "Stopping DB2 database: {{ item }}"
-  loop: "{{ running_instances.stdout.split() }}"
-  loop_control:
-    index_var: db2_instance
-  check_mode: no
-    
- 
-
-    
+    loop_var: instance
+  
