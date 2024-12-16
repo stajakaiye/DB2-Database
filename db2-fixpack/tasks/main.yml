@@ -10,11 +10,9 @@
 
 - name: Get fence ID for each instance
   shell: |
-     if [ -f /home/sqllib/ctrl/.fencedID ] ; then 
-      cat /home/sqllib/ctrl/.fenceID
-      else
-      db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
-      fi
+
+    sudo -iu {{item}}  db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
+
   register: fence_ids
   with_items: "{ running_instances.stdout_lines}"
   loop_control: 
@@ -22,7 +20,7 @@
 
 - name: Run db2support and rename the file
   shell: |
-    db2support {{ temp_dir }} -s
+    sudo -iu {{item}} db2support {{ temp_dir }} -s
     mv {{ temp_dir }}/db2support.zip {{ temp_dir }}/db2support_{{instance}}.zip
     with_items: "{{ running_instances.stdout_lines }}"
     loop_control:
@@ -63,10 +61,7 @@
     vars:
       fence_id: " {{ fence_ids.results[loop.index - 1].stdout.strip() }}"
 
-- name: Run script to update data in new path
-  shell: "{{ new_db2_path }}/instance/db2iupdt -d"
-  args: 
-    chdir: "{{ new_db2_path }}"
+
 
 - name: Start each db2 database
   debug:
@@ -75,15 +70,6 @@
   debug:
     msg: "Stopping DB2 database: {{ item }}"
   loop: "{{ running_instances.stdout.split() }}"
-  loop_control:
-    index_var: db2_instance
-  check_mode: no
-    
-- name: Stop each db2 database
-  shell: sudo -iu {{item}} db2stop force
-  loop: "{{ running_instances.stdout.split() }}"
-  loop_control:
-    index_var: db2_instance.stdout.split() }}"
   loop_control:
     index_var: db2_instance
   check_mode: no
@@ -98,12 +84,6 @@
     index_var: db2_instance
   check_mode: no
     
-- name: Stop each db2 database
-  shell: sudo -iu {{item}} db2stop force
-  loop: "{{ running_instances.stdout.split() }}"
-  loop_control:
-    index_var: db2_instance.stdout.split() }}"
-  loop_control:
-    index_var: db2_instance 
+ 
 
     
