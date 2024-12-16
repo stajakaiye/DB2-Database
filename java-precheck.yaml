@@ -33,7 +33,7 @@
         msg: | 
           Path: {{ item.item }}
           Version Output: |
-            {{ item.stdout default ('No output') }}
+            {{ item.stdout | default('No output') }}
             Errors (if any): {{ item.stderr | default('No errors') }}
       with_items: "{{ java_versions.results}}" 
       when: java_versions.results | length > 0
