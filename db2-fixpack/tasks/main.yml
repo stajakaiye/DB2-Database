@@ -16,9 +16,9 @@
   shell: |
     sudo -iu "{{ instance }}" db2support {{ temp_dir }} -s
     mv {{ temp_dir }}/db2support.zip {{ temp_dir }}/db2support_{{instance}}.zip
-    with_items: "{{ running_instances.stdout_lines }}"
-    loop_control:
-      loop_var: instance
+  loop: "{{ running_instances.stdout_lines }}"
+  loop_control:
+    loop_var: instance
       
     
 - name: Stop each db2 database
