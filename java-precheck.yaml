@@ -22,7 +22,7 @@
 
     - name: Check Java Version for each path 
       shell: |
-        {{ item }} -version 2 > $1
+        {{ item }} -version 2>&1 |awk -F '"' '/version/ {print $2}'
       with_items: "{{ unique_java_paths }}"
       register: java_versions
       ignore_errors: yes
