@@ -5,7 +5,7 @@
   tasks:
     - name: Find all path where Java is Installed
       shell: |
-        find / -type f -name "java" -executable 2>/dev/null
+        find /usr /opt -type f -name "java" -executable 2>/dev/null
       register: java_paths
       ignore_errors: yes
       changed_when: false
@@ -38,4 +38,7 @@
       with_items: "{{ java_versions.results}}" 
       when: java_versions.results | length > 0
         
-      
+    - name:  Fail if no java binarires are found
+      fail:
+        msg: "No Java binaries were found on the server"
+      when: unique_java_paths |length == 0
