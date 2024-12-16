@@ -5,28 +5,37 @@
   tasks:
     - name: Find all path where Java is Installed
       shell: |
-      find / -type d \(-name "java" -o -name "jdk" -o -name "jre*"\)
+       find / -type d \(-name "java" -o -name "jdk" -o -name "jre*"\)
       register: java_paths
       ignore_errors: yes
+      changed_when: false
+
     - name: Ensure Java path are uniqe
       set_fact:
-        unique_java_paths: "{{ java_paths_stdout_lines|unique }}"
+        unique_java_paths: "{{ java_paths.stdout_lines | unique }}"
+
     - name: Display found Java paths
       debug:
-        msg: "Found Java binary at {{ itnameem }}"
-      with_items: "{{ unique_java_path}}"
+        msg: "Found Java binary at : {{ item }}"
+      with_items: "{{ unique_java_paths}}"
+      when: unique_java_paths | length > 0
+
     - name: Check Java Version for each path 
       shell: |
         {{ item }} -version 2 > $1
-      with_items: "{{ unique_java_path}}"
+      with_items: "{{ unique_java_paths }}"
       register: java_versions
       ignore_errors: yes
+      changed_when: false 
+
     - name: Display Java version result
       debug: 
         msg: | 
           Path: {{ item.item }}
-          Output: |
-            {{ item.stdout }}
+          Version Output: |
+            {{ item.stdout default ('No output') }}
+            Errors (if any): {{ item.stderr | default('No errors') }}
       with_items: "{{ java_versions.results}}" 
+      when: java_versions.results | length > 0
         
       
