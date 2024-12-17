@@ -1,7 +1,7 @@
 ---
 - name: Install/Upgrade DB2 Fix pack special build on db2 server
   gather_facts: true
-  hosts: ebisddb01.abcbs.net
+  hosts: IGITest
   become: yes
   become_method: sudo
   vars:
