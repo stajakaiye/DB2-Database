@@ -4,14 +4,13 @@
   register: running_instances
 
 - name: Get fence ID for each instance
-  shell: sudo -H -iu igidb2 bash -lc 'db2pd -fmp 2>/dev/null |grep -w User |sort|uniq'
+  shell: bash -lc 'db2pd -fmp 2>/dev/null |grep -w User |awk '{print $3}|sort|uniq'
   register: fence_ids
   with_items: "{{ running_instances.stdout_lines }}"
   loop_control:
     loop_var: item
-  become: true
-  become_method: sudo
-  become_flags: "-tt"
+  become_user: igidb2
+
     
 - name: Debug fence_ids raw output
   debug:
