@@ -9,11 +9,11 @@
 
 - name: Get fence ID for each instance
   shell: |
-    sudo -iu "{{instance }}"  db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
-  register: item
-  with_items: "{{ item.stdout_lines }}"
-  loop_control: 
-    loop_var: instance
+    sudo -iu igidb2  db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
+  register: fenceid
+- name: Extract Fence_ID
+  set_fact:
+    fence_id: "{{ fenceid.stdout.split()[-1] }}"
 
 - name: Run db2support and rename the file
   shell: |
