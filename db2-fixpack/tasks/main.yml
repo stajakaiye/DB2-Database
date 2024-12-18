@@ -8,8 +8,9 @@
   register: running_instances
 
 - name: Get fence ID for each instance
+  become_user: "{{item}}"
   shell: |
-    sudo -iu igidb2  db2pd -fmp 2>/dev/null |grep -i "Fenced user" | awk '{print $3}'
+    db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
   register: fence_ids
   with_items: "{{ running_instances.stdout_lines }}"
   loop_control:
@@ -17,8 +18,7 @@
   
 - name: Extract fence_id_output
   debug:
-    msg: "Fenced user for Instance {{ item.item }}: {{ item.stdout }}"
-  with_items: "{{ fence_ids.results }}"
+    msg: "Fenced user for Instance "{{ fence_ids.stdout_lines }}"
 
 
 - name: Run db2support and rename the file
