@@ -18,7 +18,7 @@
   
 - name: Extract fence_id_output
   debug:
-    msg: "Fenced user for Instance "{{ fence_ids.stdout_lines }}"
+    msg: "Fenced user for Instance {{ fence_ids.stdout_lines }}"
 
 
 - name: Run db2support and rename the file
