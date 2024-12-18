@@ -13,14 +13,13 @@
   register: fence_ids
   with_items: "{{ running_instances.stdout_lines }}"
   loop_control:
-    loop_var: instance
+    loop_var: item
   
 - name: Extract fence_id_output
   debug:
-    msg: " Fenced user for Instance {{ instance }}:{{ item.stdout }}"
+    msg: " Fenced user for Instance {{ item:item }}:{{ item.stdout }}"
   with_items: "{{ fence_ids.results }}"
-  loop_control:
-    loop_var: item
+
 
 - name: Run db2support and rename the file
   shell: |
