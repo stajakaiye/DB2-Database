@@ -11,7 +11,7 @@
   shell: |
     sudo -iu "{{instance }}"  db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
   register: fence_ids
-  with_items: "{{ running_instances.stdout_lines }}"
+  with_items: "{{ items.stdout_lines }}"
   loop_control: 
     loop_var: instance
 
@@ -44,13 +44,13 @@
     
 - name: Run the install special build fix pack
   shell: |
-    ./installFixPack -b {{ base_db2_path }} -n -y -p {{ new_db2_path }}
+    sudo ./installFixPack -b {{ base_db2_path }} -n -y -p {{ new_db2_path }}
   args:
     chdir: "{{db2_binary_location}}/universal"
     
 - name: Run db2iupdt for each instance
   shell: |
-    /opt/ibm/db2/V11.5.9_SP/instance/db2iupdt -u {{ fence_id }} {{ instance }}
+    sudo /opt/ibm/db2/V11.5.9_SP/instance/db2iupdt -u {{ fence_id }} {{ instance }}
   loop: "{{ running_instances.stdout_lines }}"
   loop_control:
     loop_var: instance
