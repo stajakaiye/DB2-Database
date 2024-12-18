@@ -5,7 +5,7 @@
 
 - name: Get fence ID for each instance
   shell:
-    cmd: ". ~/.bash_profile;db2pd -fmp 2>/dev/null |grep -w User |awk '{print $3}'|sort|uniq
+    cmd: ". ~/.bash_profile;db2pd -fmp 2>/dev/null |grep -w User |awk '{print $3}'|sort|uniq"
   register: fence_ids
   with_items: "{{ running_instances.stdout_lines }}"
   loop_control:
