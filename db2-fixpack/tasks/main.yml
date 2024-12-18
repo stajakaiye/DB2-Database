@@ -17,7 +17,7 @@
 
 - name: Run db2support and rename the file
   shell: |
-    sudo -iu "{{ instance }}" db2support {{ temp_dir }} -s
+    sudo -iu igidb2 db2support {{ temp_dir }} -s
     mv {{ temp_dir }}/db2support.zip {{ temp_dir }}/db2support_{{instance}}.zip
   loop: "{{ running_instances.stdout_lines }}"
   loop_control:
