@@ -18,7 +18,7 @@
 - name: Extract fence_ids
   debug:
     msg: "Fenced user for Instance {{ item.item }}: {{ item.stdout }}"
-  with_items: "{{fence_ids.results }}"
+  with_items: "{{ fence_ids.results }}"
   loop_control:
     loop_var: item
 
