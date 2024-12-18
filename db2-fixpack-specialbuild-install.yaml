@@ -2,6 +2,8 @@
 - name: Install/Upgrade DB2 Fix pack special build on db2 server
   gather_facts: true
   hosts: IGITest
+  become: yes
+  become_method: sudo
   vars:
     new_db2_path: "/opt/ibm/db2/V11.5.9_SP"
     base_db2_path: "/opt/ibm/db2/V11.5.9"
