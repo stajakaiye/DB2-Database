@@ -28,6 +28,7 @@
   with_items: "{{ fence_ids.results }}"
   loop_control:
     loop_var: item
+
 - name: Run db2support and rename the file
   shell: |
     sudo -iu "{{instance }}" db2support {{ temp_dir }} -s
@@ -63,7 +64,7 @@
     
 - name: Run db2iupdt for each instance
   shell: |
-    sudo /opt/ibm/db2/V11.5.9_SP/instance/db2iupdt -u {{ fence_id }} {{ instance }}
+    sudo -iu "{{item}}" /opt/ibm/db2/V11.5.9_SP/instance/db2iupdt -u {{ fence_id }} {{ instance }}
   loop: "{{ running_instances.stdout_lines }}"
   loop_control:
     loop_var: instance
