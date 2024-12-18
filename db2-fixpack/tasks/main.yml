@@ -1,6 +1,4 @@
----
-
-  
+---  
 - name: Get running DB2 databses instance
   shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
   register: running_instances
