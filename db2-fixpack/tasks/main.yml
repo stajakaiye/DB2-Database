@@ -11,10 +11,16 @@
   shell: |
     sudo -iu igidb2  db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
   register: fence_ids
+  with_items: "{{ running_instances.stdout_lines }}"
+  loop_control:
+    loop_var: instance
   
 - name: Extract fence_id_output
-  set_fact:
-    fence_ids: "{{ fence_id_output.stdout.split()[-1] }}"
+  debug:
+    msg: " Fenced user for Instance {{ instance }}:{{ item.stdout }}"
+  with_items: "{{ fence_ids.results }}"
+  loop_control:
+    loop_var: item
 
 - name: Run db2support and rename the file
   shell: |
