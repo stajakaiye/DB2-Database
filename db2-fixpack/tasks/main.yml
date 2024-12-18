@@ -10,8 +10,8 @@
 - name: Get fence ID for each instance
   shell: |
     sudo -iu "{{instance }}"  db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
-  register: fence_ids
-  with_items: "{{ fence_ids.stdout_lines }}"
+  register: item
+  with_items: "{{ item.stdout_lines }}"
   loop_control: 
     loop_var: instance
 
