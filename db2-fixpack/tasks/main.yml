@@ -12,7 +12,7 @@
     
 - name: Debug fence_ids raw output
   debug:
-    var: fence_ids.results
+    var: fence_ids.stdout_lines
   
 - name: Extract fence_ids
   debug:
