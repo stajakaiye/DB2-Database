@@ -1,10 +1,11 @@
 ---  
 - name: Get running DB2 databses instance
-  shell: "echo 'ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq'"
+  shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
   register: running_instances
 
 - name: Get fence ID for each instance
-  shell: "echo 'db2pd -fmp 2>/dev/null |grep -w User |awk '{print $3}'|sort|uniq'"
+  shell:
+    cmd: ". ~/.bash_profile;db2pd -fmp 2>/dev/null |grep -w User |awk '{print $3}'|sort|uniq
   register: fence_ids
   with_items: "{{ running_instances.stdout_lines }}"
   loop_control:
