@@ -1,4 +1,9 @@
 ---  
+
+- name: Extract IBM DB2 package
+  ansible.builtin.command:
+    cmd: "tar -xvzf {{ db2_bin_temp }}/special_43682_v11.5.9_linuxx64_universal_fixpack.tar.gz -C {{db2_binary_location}}"
+
 - name: Get running DB2 databses instance
   shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
   register: running_instances
@@ -23,5 +28,54 @@
   with_items: "{{ fence_ids.results }}"
   loop_control:
     loop_var: item
+- name: Run db2support and rename the file
+  shell: |
+    sudo -iu "{{instance }}" db2support {{ temp_dir }} -s
+  loop: "{{ running_instances.stdout_lines }}"
+  loop_control:
+    loop_var: instance
+    
+- name: Run db2support and rename the file
+  shell: |
+    sudo -iu "{{instance }}" mv {{ temp_dir }}/db2support.zip {{ temp_dir }}/db2support_{{instance}}.zip
+  loop: "{{ running_instances.stdout_lines }}"
+  loop_control:
+    loop_var: instance
+      
+    
+- name: Stop each db2 database
+  shell: sudo -iu "{{item}}" db2stop force
+  with_items: "{{ running_instances.stdout_lines }}"
+  loop_control:
+    index_var: instance 
+  
+- name: create  directory for new installation
+  ansible.builtin.file:
+    path:  "{{ new_db2_path }}"
+    state: directory
+    mode: '0775'
+    
+- name: Run the install special build fix pack
+  shell: |
+    sudo ./installFixPack -b {{ base_db2_path }} -n -y -p {{ new_db2_path }}
+  args:
+    chdir: "{{db2_binary_location}}/universal"
+    
+- name: Run db2iupdt for each instance
+  shell: |
+    sudo /opt/ibm/db2/V11.5.9_SP/instance/db2iupdt -u {{ fence_id }} {{ instance }}
+  loop: "{{ running_instances.stdout_lines }}"
+  loop_control:
+    loop_var: instance
+    index_var: db2_index
+  vars:
+    fence_id: " {{ fence_ids.results[db2_index].stdout.strip() }}"
+  
+- name: Start each db2 database
+  shell: sudo -iu "{{instance }}" db2start
+  loop: "{{ running_instances.stdout.split() }}"
+  loop_control:
+    loop_var: instance
+  
 
 
