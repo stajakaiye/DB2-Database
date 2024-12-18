@@ -11,7 +11,7 @@
   shell: |
     sudo -iu "{{instance }}"  db2pd -fmp |grep -i "Fenced user" | awk '{print $3}'
   register: fence_ids
-  with_items: "{{ items.stdout_lines }}"
+  with_items: "{{ fence_ids.stdout_lines }}"
   loop_control: 
     loop_var: instance
 
