@@ -59,6 +59,12 @@
     index_var: db2_index
   vars:
     fence_id: " {{ fence_ids.results[db2_index].stdout.strip() }}"
+  register: db2iupdt_result
+  ignore_errors: no
+
+- name: debug db2iupdt output
+  debug:
+    var: db2iupdt_result
   
 - name: Start each db2 database
   become_user: igidb2
