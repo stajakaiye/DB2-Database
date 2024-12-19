@@ -54,11 +54,11 @@
 
     
 - name: Run db2iupdt for each instance
-  shell:
-    cmd: ". ~/.bash_profile;./opt/ibm/db2/V11.5.9_SP/instance/db2iupdt -u {{ fence_ids }} {{ item }} "
+  shell: |
+    ./opt/ibm/db2/V11.5.9_SP/instance/db2iupdt -u {{ fence_ids }} {{ instance }}
   loop: "{{ running_instances.stdout_lines }}"
   loop_control:
-    loop_var: item
+    loop_var: instance
     index_var: db2_index
   vars:
     fence_id: " {{ fence_ids.results[db2_index].stdout |trim }}"
