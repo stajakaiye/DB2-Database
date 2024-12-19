@@ -29,23 +29,6 @@
   loop_control:
     loop_var: item
 
-- name: Check if db2support has already been run for this instance
-  stat:
-    path: "{{ temp_dir }}/db2support_{{ instance }}.zip"
-  register: db2support_zip
-  loop: "{{ running_instances.stdout_lines }}"
-  loop_control:
-    loop_var: instance
-
-- name: Run db2support and rename the file
-  become_user: igidb2
-  shell:
-    cmd: ". ~/.bash_profile;db2support {{ temp_dir }} -s;mv {{ temp_dir }}/db2support.zip {{ temp_dir }}/db2support_{{instance}}.zip"
-  when: not db2support_zip.stat.exists
-  loop: "{{ running_instances.stdout_lines }}"
-  loop_control:
-    loop_var: instance
-
     
 - name: Stop each db2 database
   become_user: igidb2
