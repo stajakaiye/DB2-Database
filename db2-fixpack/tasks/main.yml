@@ -55,15 +55,16 @@
     
 - name: Run db2iupdt for each instance
   shell: |
-    ./db2iupdt -u {{ fence_ids }} {{ instance }}
+    ./db2iupdt -u {{ fence_id }} {{ instance }}
   args:
-    chdir: "{{  new_db2_path }}/instance"
+    chdir: "{{  new_db2_path }}/instance" 
   loop: "{{ running_instances.stdout_lines }}"
   loop_control:
     loop_var: instance
     index_var: db2_index
   vars:
     fence_id: " {{ fence_ids.results[db2_index].stdout |trim }}"
+  
 
 
   
