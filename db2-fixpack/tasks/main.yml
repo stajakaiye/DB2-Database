@@ -29,13 +29,20 @@
   loop_control:
     loop_var: item
 
+- name: Check if db2support has already been run for this instance
+  stat:
+    path: "{{ temp_dir }}/db2support_{{ instance }}.zip"
+  register: db2support_zip
+
 - name: Run db2support and rename the file
   become_user: igidb2
   shell:
     cmd: ". ~/.bash_profile;db2support {{ temp_dir }} -s"
+  when: not db2support_zip.stat.exists
   loop: "{{ running_instances.stdout_lines }}"
   loop_control:
     loop_var: instance
+
     
 - name: Run db2support and rename the file
   shell: |
@@ -43,17 +50,11 @@
   loop: "{{ running_instances.stdout_lines }}"
   loop_control:
     loop_var: instance
-  
-- name: Stop each db2 database
-  debug:
-    msg: "Stopping DB2 database: {{ item }}"
-  loop: "{{ running_instances.stdout.split() }}"
-  loop_control:
-    index_var: instance
-  check_mode: no
     
 - name: Stop each db2 database
-  shell: sudo -iu {{item}} db2stop force
+  become_user: igidb2
+  shell:
+    cmd: ". ~/.bash_profile;db2stop force"
   loop: "{{ running_instances.stdout.split() }}"
   loop_control:
     index_var: instance
