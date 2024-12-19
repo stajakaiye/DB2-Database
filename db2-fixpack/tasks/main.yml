@@ -36,7 +36,21 @@
   loop_control:
     loop_var: item
     index_var: db2_index
-
+  
+- name: Run db2support and rename the file
+  become_user: igidb2
+  shell:
+    cmd: ". ~/.bash_profile;db2support {{ temp_dir }} -s"
+  loop: "{{ running_instances.stdout_lines }}"
+  loop_control:
+    loop_var: instance
+    
+- name: Run db2support and rename the file
+  shell: |
+    mv {{ temp_dir }}/db2support.zip {{ temp_dir }}/db2support_{{instance}}.zip
+  loop: "{{ running_instances.stdout_lines }}"
+  loop_control:
+    loop_var: instance
     
 - name: Stop each db2 database
   become_user: igidb2
@@ -51,6 +65,12 @@
     path:  "{{ new_db2_path }}"
     state: directory
     mode: '0775'
+
+- name: Run the install special build fix pack
+  shell: |
+    ./installFixPack -b {{ base_db2_path }} -n -y -p {{ new_db2_path }}
+  args:
+    chdir: "{{db2_binary_location}}/universal"
 
     
 - name: Run db2iupdt for each instance
