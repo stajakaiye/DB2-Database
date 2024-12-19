@@ -85,9 +85,6 @@
   vars:
     fence_id: " {{ fence_ids.results[db2_index].stdout |trim }}"
   
-
-
-  
 - name: Start each db2 database
   become_user: igidb2
   shell:
