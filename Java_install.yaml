@@ -4,6 +4,8 @@
   hosts: IGITest
   become: yes
   become_method: sudo
+  vars:
+    db2_path: "/opt/ibm/db2/V11.5.9_SP"
   vars_prompt:
     - name: jdk_binary_location
       prompt: "Enter the Java binary software path location:"
