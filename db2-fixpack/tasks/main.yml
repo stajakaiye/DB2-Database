@@ -44,13 +44,19 @@
   loop_control:
     loop_var: instance
   
-      
+- name: Stop each db2 database
+  debug:
+    msg: "Stopping DB2 database: {{ item }}"
+  loop: "{{ running_instances.stdout.split() }}"
+  loop_control:
+    index_var: instance
+  check_mode: no
     
 - name: Stop each db2 database
-  shell: sudo -iu "{{item}}" db2stop force
-  with_items: "{{ running_instances.stdout_lines }}"
+  shell: sudo -iu {{item}} db2stop force
+  loop: "{{ running_instances.stdout.split() }}"
   loop_control:
-    index_var: instance 
+    index_var: instance
   
 - name: create  directory for new installation
   ansible.builtin.file:
