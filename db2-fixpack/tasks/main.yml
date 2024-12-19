@@ -31,7 +31,7 @@
 
 - name: Run db2support and rename the file
   become_user: igidb2
-  shell: |
+  shell:
     cmd: ". ~/.bash_profile;db2support {{ temp_dir }} -s"
   loop: "{{ running_instances.stdout_lines }}"
   loop_control:
