@@ -55,7 +55,9 @@
     
 - name: Run db2iupdt for each instance
   shell: |
-    ./opt/ibm/db2/V11.5.9_SP/instance/db2iupdt -u {{ fence_ids }} {{ instance }}
+    ./db2iupdt -u {{ fence_ids }} {{ instance }}
+  args:
+    chdir: "{{  new_db2_path }}/instance"
   loop: "{{ running_instances.stdout_lines }}"
   loop_control:
     loop_var: instance
