@@ -1,5 +1,10 @@
 ---  
-
+- name: Ensure tmp dir in ansible_db2 home
+  file:
+    path: "/home/ansible_db2/.ansible/tmp"
+    state: directory
+    mode: '0775'
+    
 - name: Extract IBM DB2 package
   ansible.builtin.command:
     cmd: "tar -xvzf {{ db2_bin_temp }}/special_43682_v11.5.9_linuxx64_universal_fixpack.tar.gz -C {{db2_binary_location}}"
