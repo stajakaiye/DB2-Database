@@ -1,1 +1,38 @@
+---
+- name: Uninstall DB2 Fix pack special build on db2 server
+  gather_facts: true
+  hosts: DevServer
+  become: yes
+  become_method: sudo
+  vars_prompt:
+    - name: db2_install_path
+      prompt: "Enter the fix pack  binary software installation path location:(eg: /opt/ibm/db2/V11.5.9)"
+  task:
+    - name: Check db2_install_path exists
+      stat:
+        path: "{{ db2_install_path }}"
+      register: install_path_status
+      
+    - name: Fail if db2_install_path doesn't exist
+      fail:
+        msg: "The provided db2 installation path {{ db2_install_path }} does not exists"
+      when: not install_path_status
 
+    - name: Run db2list to check active instance
+      command: "{{ db2_install_path }}/instance/db2list"
+      register: db2list_output
+      ignore_error: true
+
+    - name: Debug db2list output
+      debug:
+        msg: "Instance found: {{db2list_output.stdout_lines |default([]) }}"
+
+    - name: Fail if db2list found any output
+      fail:
+        msg: >
+           "Active db2 instance are still using this installation:
+           {{db2list_output.stdout_lines | join(',') }}.
+           Uninstall can't proceed"
+        when: 
+      
+      
