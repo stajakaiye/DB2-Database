@@ -66,11 +66,14 @@
   loop_control:
     index_var: db2_instance
   check_mode: no
-    
+
 - name: Start each db2 database
-  shell: sudo -iu {{item}} db2start
+  become_user: igidb2
+  shell:
+    cmd: ". ~/.bash_profile;db2start" 
   loop: "{{ db2_databases.stdout.split() }}"
   loop_control:
-    index_var: db2_instance 
+    loop_var: db2_instance
+
 
     
