@@ -1,5 +1,5 @@
 ---
-- name: Uninstall DB2 Fix pack special build on db2 server
+- name: Uninstall DB2 Fix pack special build from db2 server
   gather_facts: true
   hosts: DevServer
   become: yes
@@ -33,6 +33,19 @@
            "Active db2 instance are still using this installation:
            {{db2list_output.stdout_lines | join(',') }}.
            Uninstall can't proceed"
-        when: 
+        when: db2list_output.stdout_lines | length > 0
+        
+    - name: Proceed for uninstall DB2 Fix Pack
+      shell: |
+        cd {{ db2_install_path }}
+        ./db2_deinstall -a
+      register: uninstall_result
+      when: db2list_output.stdout_lines | length == 0
+
+    - name: Debug uninstall result
+      debug:
+        msg: "Db2 Fix Pack uninstalltion completed. Output: {{ uninstall_result.stdout }}"
+      when: uninstall_result is defined
+      
       
       
