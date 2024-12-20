@@ -1,6 +1,6 @@
 ---  
 - name: Ensure tmp dir in ansible_db2 home
-  file:
+  ansible.builtin.file:
     path: "/home/ansible_db2/.ansible/tmp"
     state: directory
     mode: '0775'
