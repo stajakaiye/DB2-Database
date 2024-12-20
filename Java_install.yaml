@@ -1,7 +1,7 @@
 ---
 - name: Install  update and configure Java on db2 server
   gather_facts: true
-  hosts: IGITest
+  hosts: DevServer
   become: yes
   become_method: sudo
   vars:
