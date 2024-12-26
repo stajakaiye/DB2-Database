@@ -6,7 +6,7 @@
   become_method: sudo
   vars:
     new_db2_path: "/opt/ibm/db2/V11.5.9_SP"
-    base_db2_path: "/opt/ibm/db2/V11.5"
+    base_db2_path: "/opt/ibm/db2/V11.5.9"
     temp_dir: "/tmp"
     db2_binary_location: "/opt/ibm/db2"
   vars_prompt:
