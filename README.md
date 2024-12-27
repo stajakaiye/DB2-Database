@@ -1,4 +1,11 @@
-# Ansible Playbook for Java upgrade 
+# Ansible Playbook for below task
+
+1. Java upgrade\
+2. DB2 start and stop\
+3. Java upgrade pre check\
+4. DB2 fix pack special patch install\
+5. DB2 fix pack special patch uninstall\
+   
 
 This reposistory contains an ansible playbook for IBM DB2 Java upgrade
 
