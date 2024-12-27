@@ -19,8 +19,8 @@
   register: fence_ids
   with_items: "{{ running_instances.stdout_lines }}"
   loop_control:
-    loop_var: item
-  become_user: igidb2
+    index_var: instance_index
+  become_user: "{{ item.split(' ')[0] }}"
 
     
 - name: Debug fence_ids raw output
@@ -48,7 +48,8 @@
     cmd: ". ~/.bash_profile;db2support {{ temp_dir }} -s"
   loop: "{{ running_instances.stdout_lines }}"
   loop_control:
-    loop_var: instance
+    index_var: instance_index
+  become_user: "{{ item.split(' ')[0] }}"
     
 - name: Run db2support and rename the file
   shell: |
@@ -58,12 +59,14 @@
     loop_var: instance
     
 - name: Stop each db2 database
-  become_user: igidb2
   shell:
     cmd: ". ~/.bash_profile;db2stop force"
-  loop: "{{ running_instances.stdout.split() }}"
+  with_items: "{{ running_instances.stdout.split() }}"
+  become: yes
   loop_control:
-    index_var: instance
+    index_var: instance_index
+  become_user: "{{ item.split(' ')[0] }}"
+
   
   
 - name: create  directory for new installation
@@ -92,12 +95,13 @@
     fence_id: " {{ fence_ids.results[db2_index].stdout |trim }}"
   
 - name: Start each db2 database
-  become_user: igidb2
   shell:
     cmd: ". ~/.bash_profile;db2start" 
-  loop: "{{ running_instances.stdout.split() }}"
+  with_items: "{{ running_instances.stdout.split() }}"
+  become: yes
   loop_control:
-    loop_var: instance
+    index_var: instance_index
+  become_user: "{{ item.split(' ')[0] }}"
   
 
 
