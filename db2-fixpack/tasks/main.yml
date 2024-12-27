@@ -45,19 +45,13 @@
   
 - name: Run db2support and rename the file
   shell:
-    cmd: ". ~/.profile;db2support {{ temp_dir }} -s"
+    cmd: ". ~/.profile;db2support {{ temp_dir }} -s; mv {{ temp_dir }}/db2support.zip {{ temp_dir }}/db2support_{{instance}}.zip"
   with_items: "{{ running_instances.stdout_lines }}"
   become: yes
   loop_control:
     index_var: instance_index
   become_user: "{{ item.split(' ')[0] }}"
-    
-- name: Run db2support and rename the file
-  shell: |
-    mv {{ temp_dir }}/db2support.zip {{ temp_dir }}/db2support_{{instance}}.zip
-  loop: "{{ running_instances.stdout_lines }}"
-  loop_control:
-    loop_var: instance
+
     
 - name: Stop each db2 database
   shell:
