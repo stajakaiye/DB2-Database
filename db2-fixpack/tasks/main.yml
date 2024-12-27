@@ -69,6 +69,11 @@
     path:  "{{ new_db2_path }}"
     state: directory
     mode: '0775'
+    
+- name: mount exec tmp set
+  shell:
+    cmd: ". ~/.profile;mount -o remount,exec /tmp"
+  become: yes
 
 - name: Run the install special build fix pack
   shell: |
@@ -88,6 +93,11 @@
     index_var: db2_index
   vars:
     fence_id: " {{ fence_ids.results[db2_index].stdout |trim }}"
+
+- name: mount exec tmp set
+  shell:
+    cmd: ". ~/.profile;mount -o remount,noexec /tmp"
+  become: yes
   
 - name: Start each db2 database
   shell:
