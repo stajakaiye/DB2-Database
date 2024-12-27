@@ -24,6 +24,6 @@ https://anssttow01.abcbs.net/#/projects
 
 Find template name "Java_Upgrade_Template" ---> Click the Launch button and then enter jdk_binary_location: <enter dump location on db2 server>  --> next -->Launch
 
-During the execution Ansible Tower will show output
+During the execution Ansible Tower will show output in jobs
 
 
