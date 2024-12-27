@@ -29,12 +29,13 @@
   check_mode: no
 
 - name: Stop each db2 database
-  become_user: igidb2
   shell:
     cmd: ". ~/.profile;db2stop force"
-  loop: "{{ db2_databases.stdout.split() }}"
+  with_items: "{{ db2_databases.stdout.split() }}"
+  become: yes
   loop_control:
-    index_var:  db2_instance
+    index_var: db2_instance
+  become_user: "{{ item.split(' ')[0] }}"
       
   
 - name: Extract IBM Java package
@@ -69,12 +70,13 @@
   check_mode: no
 
 - name: Start each db2 database
-  become_user: igidb2
   shell:
     cmd: ". ~/.profile;db2start" 
-  loop: "{{ db2_databases.stdout.split() }}"
+  with_items: "{{ db2_databases.stdout.split() }}"
+  become: yes
   loop_control:
-    loop_var: db2_instance
+    index_var: db2_instance
+  become_user: "{{ item.split(' ')[0] }}"
 
 
     
