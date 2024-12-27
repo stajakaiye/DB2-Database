@@ -72,7 +72,7 @@
     
 - name: mount exec tmp set
   shell:
-    cmd: ". ~/.profile;mount -o remount,exec /tmp"
+    cmd: "mount -o remount,exec /tmp"
   become: yes
 
 - name: Run the install special build fix pack
@@ -96,7 +96,7 @@
 
 - name: mount exec tmp set
   shell:
-    cmd: ". ~/.profile;mount -o remount,noexec /tmp"
+    cmd: "mount -o remount,noexec /tmp"
   become: yes
   
 - name: Start each db2 database
