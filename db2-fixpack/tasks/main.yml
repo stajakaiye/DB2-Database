@@ -63,8 +63,8 @@
     mode: '0775'
     
 - name: mount exec tmp set
-  shell:
-    cmd: "mount -o remount,exec /tmp"
+  shell: |
+    mount -o remount,exec /tmp
   become: yes
 
 - name: Run the install special build fix pack
@@ -87,8 +87,8 @@
     fence_id: " {{ fence_ids.results[db2_index].stdout |trim }}"
 
 - name: mount exec tmp set
-  shell:
-    cmd: "mount -o remount,noexec /tmp"
+  shell: |
+    mount -o remount,noexec /tmp
   become: yes
   
 - name: Start each db2 database
