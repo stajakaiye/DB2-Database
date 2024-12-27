@@ -15,7 +15,7 @@
 
 - name: Get fence ID for each instance
   shell:
-    cmd: ". ~/.bash_profile;db2pd -fmp 2>/dev/null |grep -w User |awk '{print $3}'|sort|uniq"
+    cmd: ". ~/.profile;db2pd -fmp 2>/dev/null |grep -w User |awk '{print $3}'|sort|uniq"
   register: fence_ids
   with_items: "{{ running_instances.stdout_lines }}"
   become: yes
@@ -45,7 +45,7 @@
   
 - name: Run db2support and rename the file
   shell:
-    cmd: ". ~/.bash_profile;db2support {{ temp_dir }} -s"
+    cmd: ". ~/.profile;db2support {{ temp_dir }} -s"
   with_items: "{{ running_instances.stdout_lines }}"
   become: yes
   loop_control:
@@ -61,7 +61,7 @@
     
 - name: Stop each db2 database
   shell:
-    cmd: ". ~/.bash_profile;db2stop force"
+    cmd: ". ~/.profile;db2stop force"
   with_items: "{{ running_instances.stdout.split() }}"
   become: yes
   loop_control:
@@ -97,7 +97,7 @@
   
 - name: Start each db2 database
   shell:
-    cmd: ". ~/.bash_profile;db2start" 
+    cmd: ". ~/.profile;db2start" 
   with_items: "{{ running_instances.stdout.split() }}"
   become: yes
   loop_control:
