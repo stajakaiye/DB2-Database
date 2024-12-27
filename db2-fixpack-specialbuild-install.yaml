@@ -1,7 +1,7 @@
 ---
 - name: Install/Upgrade DB2 Fix pack special build on db2 server
   gather_facts: true
-  hosts: ISMDEV
+  hosts: all
   become: yes
   become_method: sudo
   vars:
