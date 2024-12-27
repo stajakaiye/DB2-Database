@@ -43,10 +43,10 @@
     index_var: db2_index
   
 - name: Run db2support and rename the file
-  become_user: igidb2
   shell:
     cmd: ". ~/.bash_profile;db2support {{ temp_dir }} -s"
-  loop: "{{ running_instances.stdout_lines }}"
+  with_items: "{{ running_instances.stdout_lines }}"
+  become: yes
   loop_control:
     index_var: instance_index
   become_user: "{{ item.split(' ')[0] }}"
