@@ -31,7 +31,7 @@
 - name: Stop each db2 database
   become_user: igidb2
   shell:
-    cmd: ". ~/.bash_profile;db2stop force"
+    cmd: ". ~/.profile;db2stop force"
   loop: "{{ db2_databases.stdout.split() }}"
   loop_control:
     index_var:  db2_instance
@@ -71,7 +71,7 @@
 - name: Start each db2 database
   become_user: igidb2
   shell:
-    cmd: ". ~/.bash_profile;db2start" 
+    cmd: ". ~/.profile;db2start" 
   loop: "{{ db2_databases.stdout.split() }}"
   loop_control:
     loop_var: db2_instance
