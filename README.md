@@ -5,6 +5,7 @@
 3. Java upgrade pre check 
 4. DB2 fix pack special patch install 
 5. DB2 fix pack special patch uninstall
+6. LDAP password change
    
 
 This reposistory contains an ansible playbook for IBM DB2 for above task
