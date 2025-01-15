@@ -29,11 +29,11 @@
 
     - name: Fail if db2list found any output
       fail:
-        msg: >
+        msg: >-
            "Active db2 instance are still using this installation:
            {{db2list_output.stdout_lines | join(',') }}.
            Uninstall can't proceed"
-        when: db2list_output.stdout_lines | length > 0
+      when: db2list_output.stdout_lines | length > 0
         
     - name: mount exec tmp set
       shell: |
