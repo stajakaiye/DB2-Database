@@ -52,10 +52,10 @@
         msg: "Db2 Fix Pack uninstalltion completed. Output: {{ uninstall_result.stdout }}"
       when: uninstall_result is defined
 
-   - name: mount exec tmp set
-     shell: |
-       mount -o remount,noexec /tmp
-     become: yes
+    - name: mount exec tmp set
+      shell: |
+        mount -o remount,noexec /tmp
+      become: yes
       
       
       
