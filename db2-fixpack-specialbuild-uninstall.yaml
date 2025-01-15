@@ -21,7 +21,7 @@
     - name: Run db2list to check active instance
       command: "{{ db2_install_path }}/instance/db2list"
       register: db2list_output
-      ignore_error: true
+      ignore_errors: true
 
     - name: Debug db2list output
       debug:
