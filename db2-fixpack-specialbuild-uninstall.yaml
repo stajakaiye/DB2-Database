@@ -6,7 +6,7 @@
   become_method: sudo
   vars_prompt:
     - name: db2_install_path
-      prompt: "Enter the fix pack  binary software installation path location:(eg: /opt/ibm/db2/V11.5.9)"
+      prompt: "Enter the fix pack  binary software installation path location:(eg: /opt/ibm/db2/V11.5.9/)"
   task:
     - name: Check db2_install_path exists
       stat:
@@ -35,9 +35,14 @@
            Uninstall can't proceed"
         when: db2list_output.stdout_lines | length > 0
         
+    - name: mount exec tmp set
+      shell: |
+        mount -o remount,exec /tmp
+      become: yes
+        
     - name: Proceed for uninstall DB2 Fix Pack
       shell: |
-        cd {{ db2_install_path }}
+        cd {{ db2_install_path }}/install
         ./db2_deinstall -a
       register: uninstall_result
       when: db2list_output.stdout_lines | length == 0
@@ -46,6 +51,11 @@
       debug:
         msg: "Db2 Fix Pack uninstalltion completed. Output: {{ uninstall_result.stdout }}"
       when: uninstall_result is defined
+
+   - name: mount exec tmp set
+     shell: |
+       mount -o remount,noexec /tmp
+     become: yes
       
       
       
