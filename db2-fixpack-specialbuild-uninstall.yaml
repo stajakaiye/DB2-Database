@@ -7,7 +7,7 @@
   vars_prompt:
     - name: db2_install_path
       prompt: "Enter the fix pack  binary software installation path location:(eg: /opt/ibm/db2/V11.5.9/)"
-  task:
+  tasks:
     - name: Check db2_install_path exists
       stat:
         path: "{{ db2_install_path }}"
