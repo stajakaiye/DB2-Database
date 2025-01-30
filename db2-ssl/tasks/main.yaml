@@ -23,6 +23,10 @@
 - name: Get the SSL key location 
   shell: "db2 get dbm cfg |grep -i SSL_SVR_KEYDB|\awk '{print $7}'"
   register: keydb_location
+- name: Get the today date in MMDDYYYY format
+  command: date +"%m%d%y"
+    register: current_date
+    changed_when: false
 
 - name: Backup existing SSL key database db2 file
   copy:
