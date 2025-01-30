@@ -1,0 +1,54 @@
+---
+- name: Get running DB2 databses
+  shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
+  register: db2_databases
+
+- name: Stop each db2 database
+  debug:
+    msg: "Stopping DB2 database: {{ item }}"
+  loop: "{{ db2_databases.stdout.split() }}"
+  loop_control:
+    index_var: db2_instance
+  check_mode: no
+
+- name: Stop each db2 database
+  shell:
+    cmd: ". ~/.profile;db2stop force"
+  with_items: "{{ db2_databases.stdout.split() }}"
+  become: yes
+  loop_control:
+    index_var: db2_instance
+  become_user: "{{ item.split(' ')[0] }}"
+
+- name: Get the SSL key location 
+  shell: "db2 get dbm cfg |grep -i SSL_SVR_KEYDB|\awk '{print $7}'"
+  register: keydb_location
+
+- name: Backup existing SSL key database db2 file
+  copy:
+    src: "{{ keydb_location.stdout }}"
+    dest:  "{{ keydb_location.stdout }}.backup"
+    remote_src: yes
+    
+- name: Copy new certificate to key db2 location
+  copy:
+    src: "{{ cert_source }}"
+    dest: "{{ keydb_location.stdout }}"
+  remote_src: yes
+
+- name: Start each db2 database
+  debug:
+    msg: "Starting DB2 database: {{ item }}"
+  loop: "{{ db2_databases.stdout.split() }}"
+  loop_control:
+    index_var: db2_instance
+  check_mode: no
+
+- name: Start each db2 database
+  shell:
+    cmd: ". ~/.profile;db2start" 
+  with_items: "{{ db2_databases.stdout.split() }}"
+  become: yes
+  loop_control:
+    index_var: db2_instance
+  become_user: "{{ item.split(' ')[0] }}"
