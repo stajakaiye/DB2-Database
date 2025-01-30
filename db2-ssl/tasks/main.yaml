@@ -32,7 +32,7 @@
 - name: Backup existing SSL key database db2 file
   copy:
     src: "{{ keydb_location.stdout }}"
-    dest:  "{{ keydb_location.stdout }}.backup"
+    dest:  "{{ keydb_location.stdout }}._{{ current_date.stdout }}"
     remote_src: yes
     
 - name: Copy new certificate to key db2 location
