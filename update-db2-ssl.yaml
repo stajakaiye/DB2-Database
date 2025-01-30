@@ -1,0 +1,10 @@
+---
+- name: Update DB2 SSL Certificate 
+  gather_facts: true
+  hosts:  all
+  become: yes
+  become_method: sudo
+  vars:
+    cert_source: "/tmp/cert/"
+  tasks:
+    - name: 
