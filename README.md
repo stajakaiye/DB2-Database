@@ -6,6 +6,7 @@
 4. DB2 fix pack special patch install 
 5. DB2 fix pack special patch uninstall
 6. LDAP password change
+7. DB2 SSL certificate renew
    
 
 This reposistory contains an ansible playbook for IBM DB2 for above task
