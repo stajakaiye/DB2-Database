@@ -6,5 +6,8 @@
   become_method: sudo
   vars:
     cert_source: "/tmp/cert/"
-  tasks:
-    - name: 
+  vars_prompt:
+    - name: cert_source
+      prompt: "Enter the ssl certificate  path location:"
+  roles:
+    - db2-ssl 
