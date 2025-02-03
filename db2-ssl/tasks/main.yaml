@@ -23,7 +23,7 @@
 # db2 get dbm cfg |grep -i SSL_SVR_STASH|awk '{print $7}'|sed 's|IBMIGSDDB2A.abcbs.net.sth||
 
 - name: Get the SSL key location 
-  shell: "db2 get dbm cfg |grep -i SSL_SVR_KEYDB|\awk '{print $7}'"
+  shell: "db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
   register: keydb_location_full_path_raw
 
 - name: Extract SSL certificate directory
@@ -32,11 +32,11 @@
     
 - name: Extract SSL certificate name
   set_fact:
-    detected_ssl_cert_name_on_server: "{{ keydb_location_full_path_raw.stdout | basename }}"
+    detected_ssl_cert_name_on_server: "{{ keydb_location_full_path_raw.stdout | basename | regex_replace('\\.sth$', '') }}"
     
 - name: Detrmine final certificate name
   set_fact: 
-    final_cert_name: "cert_name if cert_name else detected_ssl_cert_name_on_server | regex_replace('\\.sth$','') "
+    final_cert_name: "{{ cert_name if cert_name else detected_ssl_cert_name_on_server }}"
 
 - name: debug extracted values details for existing certificate 
   debug:
