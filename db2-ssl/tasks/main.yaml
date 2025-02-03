@@ -22,8 +22,22 @@
 # db2 get dbm cfg |grep -i SSL_SVR_stash|awk '{print $7}'|sed 's|IBMIGSDDB2A.abcbs.net.sth||
 - name: Get the SSL key location 
   shell: "db2 get dbm cfg |grep -i SSL_SVR_KEYDB|\awk '{print $7}'"
-  register: keydb_location
-  
+  register: keydb_location_full_path_raw
+
+- name: Extract SSL certificate directory
+  set_fact:
+    ssl_cert_path: "{{ keydb_location_full_path_raw.stdout | dirname }}"
+    
+- name: Extract SSL certificate name
+  set_fact:
+    ssl_cert_name: "{{ keydb_location_full_path_raw.stdout | basename }}"
+
+- name: debug extracted values details for existing certificate 
+  debug:
+    msg:
+      - "SSL Cert path: {{ ssl_cert_path }}"
+      - ""SSL Cert name: {{ ssl_cert_name }} 
+
 - name: Get the today date in MMDDYYYY format
   command: date +"%m%d%y"
   register: current_date
