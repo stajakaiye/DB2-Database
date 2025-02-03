@@ -33,7 +33,7 @@
   copy:
     src: "{{ keydb_location.stdout }}"
     dest:  "{{ keydb_location.stdout }}._{{ current_date.stdout }}"
-    remote_src: yes
+  remote_src: yes
     
 - name: Copy new certificate to key db2 location
   copy:
