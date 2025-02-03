@@ -44,13 +44,13 @@
       - "SSL Cert path: {{ ssl_cert_path }}"
       - "SSL Cert path: {{ final_cert_name  }}" 
 
-
 - name: Backup existing SSL KDB key database db2 file
   command: mv "{{ ssl_cert_path }}/{{ final_cert_name }}.kdb"  "{{ ssl_cert_path }}/{{ final_cert_name }}.kdb.bak_{{ ansible_date_time.iso8601 }}"
-
+  ignore_errors: yes
+  
 - name: Backup existing SSL STH key database db2 file
   command: mv "{{ ssl_cert_path }}/{{ final_cert_name }}.sth"  "{{ ssl_cert_path }}/{{ final_cert_name }}.sth.bak_{{ ansible_date_time.iso8601 }}"
-
+  ignore_errors: yes
     
 - name: Copy new KEYDB certificate to key db2 location
   copy:
