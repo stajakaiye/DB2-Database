@@ -5,9 +5,7 @@
   become: yes
   become_method: sudo
   vars:
-    cert_source: "/tmp/cert/"
-  vars_prompt:
-    - name: cert_source
-      prompt: "Enter the ssl certificate  path location:"
+    cert_name: "{{ cert_name | default ('',true)}}"
+    # User need to pass certificate name
   roles:
     - db2-ssl 
