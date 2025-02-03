@@ -32,29 +32,40 @@
     
 - name: Extract SSL certificate name
   set_fact:
-    ssl_cert_name: "{{ keydb_location_full_path_raw.stdout | basename }}"
+    detected_ssl_cert_name_on_server: "{{ keydb_location_full_path_raw.stdout | basename }}"
+    
+- name: Detrmine final certificate name
+  set_fact: 
+    final_cert_name: "cert_name if cert_name else detected_ssl_cert_name_on_server | regex_replace('\\.sth$','') "
 
 - name: debug extracted values details for existing certificate 
   debug:
     msg:
       - "SSL Cert path: {{ ssl_cert_path }}"
-      - ""SSL Cert name: {{ ssl_cert_name }} 
+      - ""SSL Cert name: {{ final_cert_name }} 
 
 - name: Get the today date in MMDDYYYY format
   command: date +"%m%d%y"
   register: current_date
   changed_when: false
 
-- name: Backup existing SSL key database db2 file
-  copy:
-    src: "{{ keydb_location_full_path_raw.stdout }}"
-    dest:  "{{ keydb_location_full_path_raw.stdout }}._{{ current_date.stdout }}"
-    remote_src: yes
+- name: Backup existing SSL KDB key database db2 file
+  command: mv "{{ ssl_cert_path }}/{{ final_cert_name }}.kdb  {{ ssl_cert_path }}/{{ final_cert_name }}.kdb_{{ current_date.stdout }"
+
+- name: Backup existing SSL STH key database db2 file
+  command: mv "{{ ssl_cert_path }}/{{ final_cert_name }}.sth  {{ ssl_cert_path }}/{{ final_cert_name }}.sth_{{ current_date.stdout }"
+
     
 - name: Copy new KEYDB certificate to key db2 location
   copy:
-    src: "{{ cert_source }}"
-    dest: "{{ ssl_cert_path }}"
+    src: "/tmp/cert/{{ final_cert_name }}.kdb"
+    dest: "{{ ssl_cert_path }}/{{ final_cert_name }}.kdb"
+    remote_src: yes
+    
+- name: Copy new STASH certificate to key db2 location
+  copy:
+    src: "/tmp/cert/{{ final_cert_name }}.sth"
+    dest: "{{ ssl_cert_path }}/{{ final_cert_name }}.sth"
     remote_src: yes
 
 - name: Start each db2 database
