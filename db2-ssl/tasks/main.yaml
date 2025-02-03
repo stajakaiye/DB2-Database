@@ -19,6 +19,7 @@
   loop_control:
     index_var: db2_instance
   become_user: "{{ item.split(' ')[0] }}"
+  
 # db2 get dbm cfg |grep -i SSL_SVR_stash|awk '{print $7}'|sed 's|IBMIGSDDB2A.abcbs.net.sth||
 - name: Get the SSL key location 
   shell: "db2 get dbm cfg |grep -i SSL_SVR_KEYDB|\awk '{print $7}'"
@@ -45,14 +46,14 @@
 
 - name: Backup existing SSL key database db2 file
   copy:
-    src: "{{ keydb_location.stdout }}"
-    dest:  "{{ keydb_location.stdout }}._{{ current_date.stdout }}"
+    src: "{{ keydb_location_full_path_raw.stdout }}"
+    dest:  "{{ keydb_location_full_path_raw.stdout }}._{{ current_date.stdout }}"
     remote_src: yes
     
-- name: Copy new certificate to key db2 location
+- name: Copy new KEYDB certificate to key db2 location
   copy:
     src: "{{ cert_source }}"
-    dest: "{{ keydb_location.stdout }}"
+    dest: "{{ ssl_cert_path }}"
     remote_src: yes
 
 - name: Start each db2 database
