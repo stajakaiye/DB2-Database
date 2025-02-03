@@ -42,7 +42,7 @@
   debug:
     msg:
       - "SSL Cert path: {{ ssl_cert_path }}"
-      - "SSL Cert name: {{ final_cert_name }} 
+      - "SSL Cert path: {{ final_cert_name  }}" 
 
 
 - name: Backup existing SSL KDB key database db2 file
