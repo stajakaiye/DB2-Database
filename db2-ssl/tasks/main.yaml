@@ -42,7 +42,7 @@
   debug:
     msg:
       - "SSL Cert path: {{ ssl_cert_path }}"
-      - ""SSL Cert name: {{ final_cert_name }} 
+      - "SSL Cert name: {{ final_cert_name }} 
 
 - name: Get the today date in MMDDYYYY format
   command: date +"%m%d%y"
