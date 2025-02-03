@@ -20,7 +20,8 @@
     index_var: db2_instance
   become_user: "{{ item.split(' ')[0] }}"
   
-# db2 get dbm cfg |grep -i SSL_SVR_stash|awk '{print $7}'|sed 's|IBMIGSDDB2A.abcbs.net.sth||
+# db2 get dbm cfg |grep -i SSL_SVR_STASH|awk '{print $7}'|sed 's|IBMIGSDDB2A.abcbs.net.sth||
+
 - name: Get the SSL key location 
   shell: "db2 get dbm cfg |grep -i SSL_SVR_KEYDB|\awk '{print $7}'"
   register: keydb_location_full_path_raw
