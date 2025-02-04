@@ -41,7 +41,7 @@
 
 - name: debug extracted values details for existing certificate 
   debug:
-    msg: "{{ keydb_location_full_path_raw.stdout }}"
+    msg: "{{ keydb_location_full_path_raw }}"
 
 - name: debug extracted values details for existing certificate 
   debug:
