@@ -28,7 +28,7 @@
 
 - name: Extract SSL certificate directory
   set_fact:
-    ssl_cert_path: "{{ keydb_location_full_path_raw.stdout | dirname }}"
+    ssl_cert_path: "{{ keydb_location_full_path_raw.stdout | regex_replace('/[^/]+$', '') }}"
     
 - name: Extract SSL certificate name
   set_fact:
