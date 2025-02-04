@@ -42,7 +42,8 @@
   debug:
     msg:
       - "SSL Cert path: {{ ssl_cert_path }}"
-      - "SSL Cert path: {{ final_cert_name  }}" 
+      - "SSL Cert path with filename: {{ keydb_location_full_path_raw.stdout }}"
+      - "SSL Cert name: {{ final_cert_name  }}" 
 
 - name: Backup existing SSL KDB key database db2 file
   command: mv "{{ ssl_cert_path }}/{{ final_cert_name }}.kdb"  "{{ ssl_cert_path }}/{{ final_cert_name }}.kdb.bak_{{ ansible_date_time.iso8601 }}"
