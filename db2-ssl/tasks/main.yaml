@@ -23,8 +23,8 @@
 # db2 get dbm cfg |grep -i SSL_SVR_STASH|awk '{print $7}'|sed 's|IBMIGSDDB2A.abcbs.net.sth||
 
 - name: Get the SSL key location
-  shell:
-    cmd: ". ~/.bash_profile;db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
+  shell: db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'
+    #cmd: ". ~/.bash_profile;db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
   register: keydb_location_full_path_raw
 
 - name: Extract SSL certificate directory
