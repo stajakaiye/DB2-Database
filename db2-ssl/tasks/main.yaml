@@ -40,6 +40,10 @@
 
 - name: debug extracted values details for existing certificate 
   debug:
+    msg: "{{ keydb_location_full_path_raw.stdout }}"
+
+- name: debug extracted values details for existing certificate 
+  debug:
     msg:
       - "SSL Cert path: {{ ssl_cert_path }}"
       - "SSL Cert path with filename: {{ keydb_location_full_path_raw.stdout }}"
