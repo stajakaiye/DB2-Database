@@ -78,7 +78,7 @@
   shell: |
     ./installFixPack -b {{ base_db2_path }} -n -y -p {{ new_db2_path }}
   args:
-    chdir: "{{db2_binary_location}}/universal"
+    chdir: "{{db2_binary_location}}/server_dec"
 
     
 - name: Run db2iupdt for each instance
