@@ -27,7 +27,7 @@
     cmd: ". ~/.bash_profile;db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
   register: keydb_location_full_path_raw
   when: "item['running_instances']length >0 "
-  with_items: "{{ db2_databases.stdout.split() }}"
+  loop: "{{ running_instances }}"
   become: yes
   become_user: igidb2
 
@@ -49,7 +49,7 @@
 
 - name: debug extracted values details for existing certificate 
   debug:
-    msg: "{{ keydb_location_full_path_raw }}"
+    var: "{{ keydb_location_full_path_raw }}"
 
 - name: Debug keydb_location_full_path_raw raw output
   debug:
