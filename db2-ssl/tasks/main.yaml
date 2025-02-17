@@ -3,10 +3,6 @@
   shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
   register: db2_databases
 
-- name: Get running DB2 databses instance
-  shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
-  register: running_instances
-
 - name: Stop each db2 database
   debug:
     msg: "Stopping DB2 database: {{ item }}"
@@ -30,11 +26,15 @@
   shell:
     cmd: ". ~/.bash_profile;db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
   register: keydb_location_full_path_raw
-  with_items: "{{ running_instances.stdout_lines }}"
+  with_items: "{{ db2_databases.stdout.split() }}"
   become: yes
   loop_control:
-    index_var: instance_index
+    index_var: db2_instance
   become_user: "{{ item.split(' ')[0] }}"
+
+- name: debug extracted values details for existing certificate 
+  debug:
+    msg: "{{ keydb_location_full_path_raw }}"
 
 - name: Debug fence_ids raw output
   debug:
@@ -52,9 +52,7 @@
   set_fact: 
     final_cert_name: "{{ cert_name if cert_name else detected_ssl_cert_name_on_server }}"
 
-- name: debug extracted values details for existing certificate 
-  debug:
-    msg: "{{ keydb_location_full_path_raw }}"
+
 
 - name: debug extracted values details for existing certificate 
   debug:
