@@ -26,6 +26,8 @@
   shell: db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'
     #cmd: ". ~/.bash_profile;db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
   register: keydb_location_full_path_raw
+  become: yes
+  become_user: igidb2
 
 - name: Extract SSL certificate directory
   set_fact:
