@@ -36,6 +36,10 @@
     index_var: instance_index
   become_user: "{{ item.split(' ')[0] }}"
 
+- name: Debug fence_ids raw output
+  debug:
+    var: keydb_location_full_path_raw.results
+
 - name: Extract SSL certificate directory
   set_fact:
     ssl_cert_path: "{{ keydb_location_full_path_raw.stdout | regex_replace('/[^/]+$', '') }}"
