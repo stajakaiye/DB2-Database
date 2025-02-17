@@ -29,14 +29,30 @@
   with_items: "{{ db2_databases.stdout.split() }}"
   become: yes
   loop_control:
-    index_var: db2_instance
+    index_var: instance_index
   become_user: "{{ item.split(' ')[0] }}"
+
+- name: Extract keydb_location_full_path_raw
+  debug:
+    msg: "Fenced user for Instance {{ item.item }}: {{ item.stdout | default('No output') }}"
+  with_items: "{{ keydb_location_full_path_raw.results }}"
+  loop_control:
+    loop_var: item
+
+- name: debug and extract keydb_location_full_path_raw
+  debug:
+    msg: "Fenced user for Instance {{ item.item }}: {{ keydb_location_full_path_raw.results[db2_index].stdout | default('No output') }}"
+  with_items: "{{ keydb_location_full_path_raw.results }}"
+  loop_control:
+    loop_var: item
+    index_var: db2_index
+
 
 - name: debug extracted values details for existing certificate 
   debug:
     msg: "{{ keydb_location_full_path_raw }}"
 
-- name: Debug fence_ids raw output
+- name: Debug keydb_location_full_path_raw raw output
   debug:
     var: keydb_location_full_path_raw.results
 
