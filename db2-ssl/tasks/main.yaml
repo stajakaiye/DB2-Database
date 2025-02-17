@@ -26,8 +26,8 @@
   shell:
     cmd: ". ~/.bash_profile;db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
   register: keydb_location_full_path_raw
-  when: "item['running_instances']length >0 "
-  loop: "{{ running_instances }}"
+  when: "item['db2_databases']length >0 "
+  loop: "{{ db2_databases }}"
   become: yes
   become_user: igidb2
 
