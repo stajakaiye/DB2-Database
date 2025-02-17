@@ -1,37 +1,42 @@
 ---
-- name: Get running DB2 databses
+- name: Get running DB2 databses instance
   shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
-  register: db2_databases
-
-- name: Stop each db2 database
-  debug:
-    msg: "Stopping DB2 database: {{ item }}"
-  loop: "{{ db2_databases.stdout.split() }}"
-  loop_control:
-    index_var: db2_instance
-  check_mode: no
-
-- name: Stop each db2 database
-  shell:
-    cmd: ". ~/.profile;db2stop force"
-  with_items: "{{ db2_databases.stdout.split() }}"
-  become: yes
-  loop_control:
-    index_var: db2_instance
-  become_user: "{{ item.split(' ')[0] }}"
+  register: running_instances
   
 # db2 get dbm cfg |grep -i SSL_SVR_STASH|awk '{print $7}'|sed 's|IBMIGSDDB2A.abcbs.net.sth||
 
-- name: Get the SSL key location
-  shell: 
-    cmd: ". ~/.profile;db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
-  register: keydb_location_full_path_raw
-  become: yes
-  become_user: igidb2
 
-- name: Extract SSL certificate directory
-  set_fact:
-    ssl_cert_path: "{{ keydb_location_full_path_raw.stdout | regex_replace('/[^/]+$', '') }}"
+
+- name: Get fence ID for each instance
+  shell:
+    cmd: ". ~/.profile;db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
+  register: fence_ids
+  with_items: "{{ running_instances.stdout_lines }}"
+  become: yes
+  loop_control:
+    index_var: instance_index
+  become_user: "{{ item.split(' ')[0] }}"
+
+    
+- name: Debug fence_ids raw output
+  debug:
+    var: fence_ids.results
+  
+- name: Extract fence_ids
+  debug:
+    msg: "Fenced user for Instance {{ item.item }}: {{ item.stdout | default('No output') }}"
+  with_items: "{{ fence_ids.results }}"
+  loop_control:
+    loop_var: item
+
+- name: debug and extract fence id
+  debug:
+    msg: "Fenced user for Instance {{ item.item }}: {{ fence_ids.results[db2_index].stdout | default('No output') }}"
+  with_items: "{{ fence_ids.results }}"
+  loop_control:
+    loop_var: item
+    index_var: db2_index
+
     
 - name: Extract SSL certificate name
   set_fact:
