@@ -26,10 +26,9 @@
   shell:
     cmd: ". ~/.bash_profile;db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
   register: keydb_location_full_path_raw
+  when: "item['running_instances']length >0 "
   with_items: "{{ db2_databases.stdout.split() }}"
   become: yes
-  loop_control:
-    index_var: instance_index
   become_user: igidb2
 
 - name: Extract keydb_location_full_path_raw
