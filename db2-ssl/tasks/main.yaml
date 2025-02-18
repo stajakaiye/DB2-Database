@@ -40,7 +40,7 @@
     
 - name: Extract SSL certificate name
   set_fact:
-    detected_ssl_cert_name_on_server: "{{ keydb_location_full_path_raw.stdout | basename | regex_replace('\\.sth$', '') }}"
+    detected_ssl_cert_name_on_server: "{{ cert_name.stdout | basename | regex_replace('\\.sth$', '') }}"
     
 - name: Detrmine final certificate name
   set_fact: 
@@ -54,7 +54,7 @@
   debug:
     msg:
       - "SSL Cert path: {{ ssl_cert_path }}"
-      - "SSL Cert path with filename: {{ keydb_location_full_path_raw.stdout }}"
+      - "SSL Cert path with filename: {{ cert_name }}"
       - "SSL Cert name: {{ final_cert_name  }}" 
 
 - name: Backup existing SSL KDB key database db2 file
