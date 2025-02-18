@@ -2,23 +2,6 @@
 - name: Get running DB2 databses
   shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
   register: db2_databases
-
-- name: Stop each db2 database
-  debug:
-    msg: "Stopping DB2 database: {{ item }}"
-  loop: "{{ db2_databases.stdout.split() }}"
-  loop_control:
-    index_var: db2_instance
-  check_mode: no
-
-- name: Stop each db2 database
-  shell:
-    cmd: ". ~/.profile;db2stop force"
-  with_items: "{{ db2_databases.stdout.split() }}"
-  become: yes
-  loop_control:
-    index_var: db2_instance
-  become_user: "{{ item.split(' ')[0] }}"
   
 # db2 get dbm cfg |grep -i SSL_SVR_STASH|awk '{print $7}'|sed 's|IBMIGSDDB2A.abcbs.net.sth||
 
@@ -43,6 +26,23 @@
     msg:
       - "SSL Cert path: {{ ssl_cert_path }}"
       - "SSL Cert path: {{ final_cert_name  }}" 
+
+- name: Stop each db2 database
+  debug:
+    msg: "Stopping DB2 database: {{ item }}"
+  loop: "{{ db2_databases.stdout.split() }}"
+  loop_control:
+    index_var: db2_instance
+  check_mode: no
+
+- name: Stop each db2 database
+  shell:
+    cmd: ". ~/.profile;db2stop force"
+  with_items: "{{ db2_databases.stdout.split() }}"
+  become: yes
+  loop_control:
+    index_var: db2_instance
+  become_user: "{{ item.split(' ')[0] }}"
 
 - name: Backup existing SSL KDB key database db2 file
   command: mv "{{ ssl_cert_path }}/{{ final_cert_name }}.kdb"  "{{ ssl_cert_path }}/{{ final_cert_name }}.kdb.bak_{{ ansible_date_time.iso8601 }}"
