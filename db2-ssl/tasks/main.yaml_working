@@ -1,0 +1,82 @@
+---
+- name: Get running DB2 databses
+  shell: ps -ef|grep -w db2sysc|grep -v grep|awk '{print $1}'|sort|uniq
+  register: db2_databases
+
+- name: Stop each db2 database
+  debug:
+    msg: "Stopping DB2 database: {{ item }}"
+  loop: "{{ db2_databases.stdout.split() }}"
+  loop_control:
+    index_var: db2_instance
+  check_mode: no
+
+- name: Stop each db2 database
+  shell:
+    cmd: ". ~/.profile;db2stop force"
+  with_items: "{{ db2_databases.stdout.split() }}"
+  become: yes
+  loop_control:
+    index_var: db2_instance
+  become_user: "{{ item.split(' ')[0] }}"
+  
+# db2 get dbm cfg |grep -i SSL_SVR_STASH|awk '{print $7}'|sed 's|IBMIGSDDB2A.abcbs.net.sth||
+
+- name: Get the SSL key location 
+  shell: "db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
+  register: keydb_location_full_path_raw
+
+- name: Extract SSL certificate directory
+  set_fact:
+    ssl_cert_path: "{{ keydb_location_full_path_raw.stdout | dirname }}"
+    
+- name: Extract SSL certificate name
+  set_fact:
+    detected_ssl_cert_name_on_server: "{{ keydb_location_full_path_raw.stdout | basename | regex_replace('\\.sth$', '') }}"
+    
+- name: Detrmine final certificate name
+  set_fact: 
+    final_cert_name: "{{ cert_name if cert_name else detected_ssl_cert_name_on_server }}"
+
+- name: debug extracted values details for existing certificate 
+  debug:
+    msg:
+      - "SSL Cert path: {{ ssl_cert_path }}"
+      - "SSL Cert path: {{ final_cert_name  }}" 
+
+- name: Backup existing SSL KDB key database db2 file
+  command: mv "{{ ssl_cert_path }}/{{ final_cert_name }}.kdb"  "{{ ssl_cert_path }}/{{ final_cert_name }}.kdb.bak_{{ ansible_date_time.iso8601 }}"
+  ignore_errors: yes
+  
+- name: Backup existing SSL STH key database db2 file
+  command: mv "{{ ssl_cert_path }}/{{ final_cert_name }}.sth"  "{{ ssl_cert_path }}/{{ final_cert_name }}.sth.bak_{{ ansible_date_time.iso8601 }}"
+  ignore_errors: yes
+    
+- name: Copy new KEYDB certificate to key db2 location
+  copy:
+    src: "/tmp/cert/{{ final_cert_name }}.kdb"
+    dest: "{{ ssl_cert_path }}/{{ final_cert_name }}.kdb"
+    remote_src: yes
+    
+- name: Copy new STASH certificate to key db2 location
+  copy:
+    src: "/tmp/cert/{{ final_cert_name }}.sth"
+    dest: "{{ ssl_cert_path }}/{{ final_cert_name }}.sth"
+    remote_src: yes
+
+- name: Start each db2 database
+  debug:
+    msg: "Starting DB2 database: {{ item }}"
+  loop: "{{ db2_databases.stdout.split() }}"
+  loop_control:
+    index_var: db2_instance
+  check_mode: no
+
+- name: Start each db2 database
+  shell:
+    cmd: ". ~/.profile;db2start" 
+  with_items: "{{ db2_databases.stdout.split() }}"
+  become: yes
+  loop_control:
+    index_var: db2_instance
+  become_user: "{{ item.split(' ')[0] }}"
