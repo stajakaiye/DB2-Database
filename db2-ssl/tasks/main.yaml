@@ -38,10 +38,6 @@
     index_var: db2_index
 
     
-- name: Extract SSL certificate name
-  set_fact:
-    detected_ssl_cert_name_on_server: "{{ cert_name.stdout | basename | regex_replace('\\.sth$', '') }}"
-    
 - name: Detrmine final certificate name
   set_fact: 
     final_cert_name: "{{ cert_name if cert_name else detected_ssl_cert_name_on_server }}"
