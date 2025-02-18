@@ -7,10 +7,10 @@
 
 
 
-- name: Get fence ID for each instance
+- name: Get keydb_location_full_path_raw for each instance
   shell:
     cmd: ". ~/.profile;db2 get dbm cfg |grep -i SSL_SVR_STASH| awk '{print $7}'"
-  register: fence_ids
+  register: keydb_location_full_path_raw
   with_items: "{{ running_instances.stdout_lines }}"
   become: yes
   loop_control:
@@ -18,21 +18,21 @@
   become_user: "{{ item.split(' ')[0] }}"
 
     
-- name: Debug fence_ids raw output
+- name: Debug keydb_location_full_path_raw raw output
   debug:
-    var: fence_ids.results
+    var: keydb_location_full_path_raw.results
   
-- name: Extract fence_ids
+- name: Extract keydb_location_full_path_raw
   debug:
     msg: "Fenced user for Instance {{ item.item }}: {{ item.stdout | default('No output') }}"
-  with_items: "{{ fence_ids.results }}"
+  with_items: "{{ keydb_location_full_path_raw.results }}"
   loop_control:
     loop_var: item
 
-- name: debug and extract fence id
+- name: debug and extract keydb_location_full_path_raw
   debug:
-    msg: "Fenced user for Instance {{ item.item }}: {{ fence_ids.results[db2_index].stdout | default('No output') }}"
-  with_items: "{{ fence_ids.results }}"
+    msg: "Fenced user for Instance {{ item.item }}: {{ keydb_location_full_path_raw.results[db2_index].stdout | default('No output') }}"
+  with_items: "{{ keydb_location_full_path_raw.results }}"
   loop_control:
     loop_var: item
     index_var: db2_index
