@@ -40,7 +40,7 @@
   
 - name: Extract IBM Java package
   ansible.builtin.command:
-    cmd: "tar -xvzf {{jdk_binary_location}}/java/ibm-java-sdk-8.0-8.30-linux-x86_64.tgz -C {{jdk_binary_location}}/java/java64"
+    cmd: "tar -xvzf {{jdk_binary_location}}/java/ibm-java-sdk-8.0-8.35-linux-x86_64.tgz -C {{jdk_binary_location}}/java/java64"
     
 - name: taking backup of alraedy installed IBM Java package
   ansible.builtin.command:
