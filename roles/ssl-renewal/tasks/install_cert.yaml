@@ -1,0 +1,15 @@
+---
+- name: Copy Signed Certifiacte
+  copy:
+    src: "{{  }}"
+    dest: "{{ cert_path }}/{{ item }}"
+    mode: "0664"
+  with_items:
+    - "{{ root_cert_file }}"
+    - "{{ intermidiate_cert_file }}"
+    - "{{ server_cert_file }}"
+- name: Add Root CA Certificate
+  command: >
+    gsk8capicmd_64 -cert -add -db ibmigstdb2a.abcbs.net.kdb -stashed -type cms -file ABCBSRootCA.cer -label ABCBSRootCA -format ascii -trust enable
+  
+  

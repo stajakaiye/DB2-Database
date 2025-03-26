@@ -1,0 +1,20 @@
+---
+- name: Check if KDB file alraedy exists
+  stat:
+    path: "{{ kdb_path }}/{{kdb_name}}"
+  register: kdb_file
+
+- name: Create kdb file
+  command: >
+    gsk8capicmd_64 -keydb -create -db {{ kdb_path }}/{{kdb_name}} -pw {{ kdb_password }} -type cms -stash
+  when: not kdb_file.stat.exists
+
+- name: Genrate CSR for SSL renewal
+  command: >
+    gsk8capicmd_64 -certreq -create -db {{ kdb_path }}/{{kdb_name}} -stashed -type cms -target {{ csr_path }}/{{csr_file}} -label {{ csr_label }} -dn "{{ cert_dn}}" -size 2048 -sigalg SHA256WithRSA -san_dnsname {{ san_dns }}
+  args:
+  creates: "{{ csr_path}}/{{ csr_file }}"
+
+- name: Pause Job and wait for Certifiacte signing by IBM 
+  pause:
+    prompt: "CSR has been genrated. Please send to respective team"

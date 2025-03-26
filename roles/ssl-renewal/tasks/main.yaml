@@ -1,0 +1,3 @@
+---
+- name: Create KDB files
+  include_tasks: create_kdb.yaml
