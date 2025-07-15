@@ -18,7 +18,7 @@
     cmd: ". ~/.profile;db2pd -fmp 2>/dev/null |grep -w User |awk '{print $3}'|sort|uniq"
   register: fence_ids
   with_items: "{{ running_instances.stdout_lines }}"
-  become: yes
+  become: no
   loop_control:
     index_var: instance_index
   become_user: "{{ item.split(' ')[0] }}"
